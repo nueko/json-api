@@ -19,9 +19,9 @@
 use \Closure;
 use \Exception;
 use \Neomerx\JsonApi\Encoder\Encoder;
-use Neomerx\JsonApi\Encoder\JsonEncodeOptions;
 use \Neomerx\JsonApi\Responses\Responses;
 use \Neomerx\JsonApi\Parameters\MediaType;
+use \Neomerx\JsonApi\Encoder\JsonEncodeOptions;
 use \Neomerx\JsonApi\Contracts\Document\ErrorInterface;
 use \Neomerx\JsonApi\Contracts\Responses\ResponsesInterface;
 use \Neomerx\JsonApi\Contracts\Codec\CodecContainerInterface;
