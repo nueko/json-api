@@ -264,7 +264,7 @@ You can fully customize how your output result will look like
 * Add meta to document, resource objects or link objects.
 * Show object links as references.
 * Show/hide ```self```, ```related```, ```links```, ```meta``` for each resource type individually for both main and included objects and links.
-* Specify what links should place resources to ```included``` section and set default inclusion depth for each resource type independently.
+* Specify what links should place resources to ```included``` section for each resource type independently.
 
 ### Sample source code
 
