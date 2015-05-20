@@ -39,9 +39,8 @@ class EncodeErrorsTest extends BaseTestCase
             'some-code',
             'some-title',
             'some-detail',
-            ['link1'],
-            ['paths'],
-            ['additional' => 'members']
+            ['source' => 'data'],
+            ['some'   => 'meta']
         );
 
         $endcoder = Encoder::instance([
@@ -59,13 +58,8 @@ class EncodeErrorsTest extends BaseTestCase
                 "code"   : "some-code",
                 "title"  : "some-title",
                 "detail" : "some-detail",
-                "links" : [
-                    "link1"
-                ],
-                "paths" : [
-                    "paths"
-                ],
-                "additional" : "members"
+                "source" : {"source" : "data"},
+                "meta"   : {"some" : "meta"}
             }]
         }
 EOL;
@@ -87,9 +81,8 @@ EOL;
             'some-code',
             'some-title',
             'some-detail',
-            ['link1'],
-            ['paths'],
-            ['additional' => 'members']
+            ['source' => 'data'],
+            ['some'   => 'meta']
         );
 
         $endcoder = Encoder::instance([
@@ -107,13 +100,8 @@ EOL;
                 "code"   : "some-code",
                 "title"  : "some-title",
                 "detail" : "some-detail",
-                "links" : [
-                    "link1"
-                ],
-                "paths" : [
-                    "paths"
-                ],
-                "additional" : "members"
+                "source" : {"source" : "data"},
+                "meta"   : {"some" : "meta"}
             }]
         }
 EOL;

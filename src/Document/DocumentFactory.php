@@ -54,10 +54,9 @@ class DocumentFactory implements DocumentFactoryInterface
         $code = null,
         $title = null,
         $detail = null,
-        array $links = null,
-        array $paths = null,
-        array $members = null
+        $source = null,
+        array $meta = null
     ) {
-        return new Error($idx, $href, $status, $code, $title, $detail, $links, $paths, $members);
+        return new Error($idx, $href, $status, $code, $title, $detail, $source, $meta);
     }
 }

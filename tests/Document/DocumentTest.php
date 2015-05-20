@@ -1153,9 +1153,8 @@ EOL;
             'some-code',
             'some-title',
             'some-detail',
-            ['link1'],
-            ['paths'],
-            ['additional' => 'members']
+            ['source' => 'data'],
+            ['meta' => 'data']
         ));
 
         $expected = <<<EOL
@@ -1167,13 +1166,8 @@ EOL;
                 "code"   : "some-code",
                 "title"  : "some-title",
                 "detail" : "some-detail",
-                "links" : [
-                    "link1"
-                ],
-                "paths" : [
-                    "paths"
-                ],
-                "additional" : "members"
+                "source" : {"source" : "data"},
+                "meta"   : {"meta" : "data"}
             }]
         }
 EOL;

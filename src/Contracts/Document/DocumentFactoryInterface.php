@@ -56,9 +56,8 @@ interface DocumentFactoryInterface
      * @param string|null     $code
      * @param string|null     $title
      * @param string|null     $detail
-     * @param string[]|null   $links
-     * @param string[]|null   $paths
-     * @param array|null      $members Array of additional members in [memberName => memberValue, ...] format
+     * @param mixed|null      $source
+     * @param array|null      $meta
      *
      * @return ErrorInterface
      */
@@ -69,8 +68,7 @@ interface DocumentFactoryInterface
         $code = null,
         $title = null,
         $detail = null,
-        array $links = null,
-        array $paths = null,
-        array $members = null
+        $source = null,
+        array $meta = null
     );
 }

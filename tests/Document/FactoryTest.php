@@ -80,9 +80,8 @@ class FactoryTest extends BaseTestCase
             $code = 'some-code',
             $title = 'some-title',
             $detail = 'some-detail',
-            $links = ['link1'],
-            $paths = ['paths'],
-            $members = ['members']
+            $source = ['source' => 'info'],
+            $meta = ['meta' => 'info']
         ));
 
         $this->assertEquals($idx, $error->getId());
@@ -91,8 +90,7 @@ class FactoryTest extends BaseTestCase
         $this->assertEquals($code, $error->getCode());
         $this->assertEquals($title, $error->getTitle());
         $this->assertEquals($detail, $error->getDetail());
-        $this->assertEquals($links, $error->getLinks());
-        $this->assertEquals($paths, $error->getPaths());
-        $this->assertEquals($members, $error->getAdditionalMembers());
+        $this->assertEquals($source, $error->getSource());
+        $this->assertEquals($meta, $error->getMeta());
     }
 }

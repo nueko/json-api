@@ -74,9 +74,9 @@ class Document implements DocumentInterface
     /** Reserved keyword */
     const KEYWORD_ERRORS_DETAIL = 'detail';
     /** Reserved keyword */
-    const KEYWORD_ERRORS_LINKS  = 'links';
+    const KEYWORD_ERRORS_META   = 'meta';
     /** Reserved keyword */
-    const KEYWORD_ERRORS_PATHS  = 'paths';
+    const KEYWORD_ERRORS_SOURCE = 'source';
 
     /**
      * @var array
@@ -335,16 +335,11 @@ class Document implements DocumentInterface
             self::KEYWORD_ERRORS_CODE   => $error->getCode(),
             self::KEYWORD_ERRORS_TITLE  => $error->getTitle(),
             self::KEYWORD_ERRORS_DETAIL => $error->getDetail(),
-            self::KEYWORD_ERRORS_LINKS  => $error->getLinks(),
-            self::KEYWORD_ERRORS_PATHS  => $error->getPaths(),
+            self::KEYWORD_ERRORS_SOURCE => $error->getSource(),
+            self::KEYWORD_ERRORS_META   => $error->getMeta(),
         ], function ($value) {
             return $value !== null;
         });
-
-        $members = $error->getAdditionalMembers();
-        if (empty($members) === false) {
-            $representation += $members;
-        }
 
         $this->errors[] = $representation;
     }
