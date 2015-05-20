@@ -257,8 +257,8 @@ EOL;
             false,
             false
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -270,7 +270,7 @@ EOL;
             true,
             $this->schemaFactory->createPaginationLinks('/first')
         );
-        $this->document->addLinkToData($parent, $link, $resource);
+        $this->document->addRelationshipToData($parent, $link, $resource);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -282,13 +282,15 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : {
-                        "self"    : "peopleSelfUrl/selfSubUrl",
-                        "related" : "peopleSelfUrl/relatedSubUrl",
-                        "meta"    : { "some" : "comment meta" },
-                        "first"   : "/first",
-                        "linkage" : { "type" : "comments", "id" : "321" }
+                "relationships" : {
+                    "comments-relationship" : {
+                        "links"   : {
+                            "self"    : "peopleSelfUrl/selfSubUrl",
+                            "related" : "peopleSelfUrl/relatedSubUrl",
+                            "first"   : "/first"
+                        },
+                        "linkage" : { "type" : "comments", "id" : "321" },
+                        "meta"    : { "some" : "comment meta" }
                     }
                 }
             }
@@ -330,8 +332,8 @@ EOL;
             true,
             true
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             '/selfSubUrl',
             'relatedSubUrl',
@@ -343,7 +345,7 @@ EOL;
             false,
             null
         );
-        $this->document->addLinkToData($parent, $link, $resource);
+        $this->document->addRelationshipToData($parent, $link, $resource);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -355,8 +357,8 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : {
+                "relationships" : {
+                    "comments-relationship" : {
                         "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
                     }
                 }
@@ -399,8 +401,8 @@ EOL;
             true,
             true
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             '/selfSubUrl',
             'relatedSubUrl',
@@ -412,8 +414,8 @@ EOL;
             false,
             null
         );
-        $this->document->addLinkToData($parent, $link, $resource);
-        $this->document->addLinkToData($parent, $link, $resource);
+        $this->document->addRelationshipToData($parent, $link, $resource);
+        $this->document->addRelationshipToData($parent, $link, $resource);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -425,8 +427,8 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : {
+                "relationships" : {
+                    "comments-relationship" : {
                         "linkage" : [
                             { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} },
                             { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
@@ -472,8 +474,8 @@ EOL;
             true,
             true
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -485,7 +487,7 @@ EOL;
             false,
             null
         );
-        $this->document->addLinkToData($parent, $link, $resource);
+        $this->document->addRelationshipToData($parent, $link, $resource);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -497,8 +499,8 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : {
+                "relationships" : {
+                    "comments-relationship" : {
                         "meta" : { "some" : "comment meta" }
                     }
                 }
@@ -533,7 +535,7 @@ EOL;
             '321',
             ['title' => 'some title', 'body' => 'some body'],
             ['some' => 'comment meta'],
-            'ommentsSelfUrl',
+            'commentsSelfUrl',
             false,
             false,
             false,
@@ -541,8 +543,8 @@ EOL;
             false,
             false
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -566,8 +568,8 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : "peopleSelfUrl/relatedSubUrl"
+                "relationships" : {
+                    "relationship-name" : "peopleSelfUrl/relatedSubUrl"
                 }
             }
         }
@@ -594,8 +596,8 @@ EOL;
             false,
             false
         ));
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -607,7 +609,7 @@ EOL;
             false,
             null
         );
-        $this->document->addEmptyLinkToData($parent, $link);
+        $this->document->addEmptyRelationshipToData($parent, $link);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -619,8 +621,8 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : []
+                "relationships" : {
+                    "relationship-name" : []
                 }
             }
         }
@@ -647,8 +649,8 @@ EOL;
             false,
             false
         ));
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -660,7 +662,7 @@ EOL;
             false,
             null
         );
-        $this->document->addNullLinkToData($parent, $link);
+        $this->document->addNullRelationshipToData($parent, $link);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -672,8 +674,8 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "link-name" : null
+                "relationships" : {
+                    "relationship-name" : null
                 }
             }
         }
@@ -798,8 +800,8 @@ EOL;
             true,
             true
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -811,7 +813,7 @@ EOL;
             false,
             null
         );
-        $this->document->addLinkToIncluded($parent, $link, $resource);
+        $this->document->addRelationshipToIncluded($parent, $link, $resource);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -824,14 +826,18 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "self" : "peopleSelfUrl/",
-                    "link-name" : {
-                        "self"    : "peopleSelfUrl/selfSubUrl",
-                        "related" : "peopleSelfUrl/relatedSubUrl",
-                        "meta"    : { "some" : "comment meta" },
-                        "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
+                "relationships" : {
+                    "comments-relationship" : {
+                        "links"   : {
+                            "self"    : "peopleSelfUrl/selfSubUrl",
+                            "related" : "peopleSelfUrl/relatedSubUrl"
+                        },
+                        "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} },
+                        "meta"    : { "some" : "comment meta" }
                     }
+                },
+                "links" : {
+                    "self" : "peopleSelfUrl/"
                 },
                 "meta" : {
                     "some" : "author meta"
@@ -875,8 +881,8 @@ EOL;
             true,
             true
         );
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -888,7 +894,7 @@ EOL;
             false,
             null
         );
-        $this->document->addLinkToIncluded($parent, $link, $resource);
+        $this->document->addRelationshipToIncluded($parent, $link, $resource);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -901,11 +907,13 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "self" : "peopleSelfUrl/",
-                    "link-name" : {
+                "relationships" : {
+                    "comments-relationship" : {
                         "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
                     }
+                },
+                "links" : {
+                    "self" : "peopleSelfUrl/"
                 },
                 "meta" : {
                     "some" : "author meta"
@@ -935,7 +943,7 @@ EOL;
             true,
             true
         ));
-        $link = $this->schemaFactory->createLinkObject(
+        $link = $this->schemaFactory->createRelationshipObject(
             'link-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
@@ -948,7 +956,7 @@ EOL;
             false,
             null
         );
-        $this->document->addEmptyLinkToIncluded($parent, $link);
+        $this->document->addEmptyRelationshipToIncluded($parent, $link);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -961,9 +969,11 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "self"      : "peopleSelfUrl/",
+                "relationships" : {
                     "link-name" : []
+                },
+                "links" : {
+                    "self" : "peopleSelfUrl/"
                 },
                 "meta" : {
                     "some" : "author meta"
@@ -993,7 +1003,7 @@ EOL;
             true,
             true
         ));
-        $link = $this->schemaFactory->createLinkObject(
+        $link = $this->schemaFactory->createRelationshipObject(
             'link-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
@@ -1006,7 +1016,7 @@ EOL;
             false,
             null
         );
-        $this->document->addNullLinkToIncluded($parent, $link);
+        $this->document->addNullRelationshipToIncluded($parent, $link);
         $this->document->setResourceCompleted($parent);
 
         $expected = <<<EOL
@@ -1019,9 +1029,11 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
-                "links" : {
-                    "self"      : "peopleSelfUrl/",
+                "relationships" : {
                     "link-name" : null
+                },
+                "links" : {
+                    "self" : "peopleSelfUrl/"
                 },
                 "meta" : {
                     "some" : "author meta"
@@ -1051,8 +1063,8 @@ EOL;
             true,
             true
         ));
-        $link = $this->schemaFactory->createLinkObject(
-            'link-name',
+        $link = $this->schemaFactory->createRelationshipObject(
+            'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
             'selfSubUrl',
             'relatedSubUrl',
@@ -1077,9 +1089,11 @@ EOL;
                     "firstName" : "John",
                     "lastName"  : "Dow"
                 },
+                "relationships" : {
+                    "relationship-name" : "peopleSelfUrl/relatedSubUrl"
+                },
                 "links" : {
-                    "self"      : "peopleSelfUrl/",
-                    "link-name" : "peopleSelfUrl/relatedSubUrl"
+                    "self" : "peopleSelfUrl/"
                 },
                 "meta" : {
                     "some" : "author meta"

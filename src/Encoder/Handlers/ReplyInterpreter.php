@@ -173,13 +173,13 @@ class ReplyInterpreter implements ReplyInterpreterInterface
                 $this->document->addReferenceToData($parent, $link);
                 break;
             case ParserReplyInterface::REPLY_TYPE_NULL_RESOURCE_STARTED:
-                $this->document->addNullLinkToData($parent, $link);
+                $this->document->addNullRelationshipToData($parent, $link);
                 break;
             case ParserReplyInterface::REPLY_TYPE_EMPTY_RESOURCE_STARTED:
-                $this->document->addEmptyLinkToData($parent, $link);
+                $this->document->addEmptyRelationshipToData($parent, $link);
                 break;
             case ParserReplyInterface::REPLY_TYPE_RESOURCE_STARTED:
-                $this->document->addLinkToData($parent, $link, $current->getResourceObject());
+                $this->document->addRelationshipToData($parent, $link, $current->getResourceObject());
                 break;
         }
     }
@@ -202,13 +202,13 @@ class ReplyInterpreter implements ReplyInterpreterInterface
                 $this->document->addReferenceToIncluded($parent, $link);
                 break;
             case ParserReplyInterface::REPLY_TYPE_NULL_RESOURCE_STARTED:
-                $this->document->addNullLinkToIncluded($parent, $link);
+                $this->document->addNullRelationshipToIncluded($parent, $link);
                 break;
             case ParserReplyInterface::REPLY_TYPE_EMPTY_RESOURCE_STARTED:
-                $this->document->addEmptyLinkToIncluded($parent, $link);
+                $this->document->addEmptyRelationshipToIncluded($parent, $link);
                 break;
             case ParserReplyInterface::REPLY_TYPE_RESOURCE_STARTED:
-                $this->document->addLinkToIncluded($parent, $link, $current->getResourceObject());
+                $this->document->addRelationshipToIncluded($parent, $link, $current->getResourceObject());
                 break;
         }
     }

@@ -66,7 +66,7 @@ interface DocumentInterface
     public function setNullData();
 
     /**
-     * Add a link to resource in 'data' section.
+     * Add a relationship to resource in 'data' section.
      *
      * @param ResourceObjectInterface $parent
      * @param LinkObjectInterface     $link
@@ -74,7 +74,7 @@ interface DocumentInterface
      *
      * @return void
      */
-    public function addLinkToData(
+    public function addRelationshipToData(
         ResourceObjectInterface $parent,
         LinkObjectInterface $link,
         ResourceObjectInterface $resource
@@ -91,24 +91,24 @@ interface DocumentInterface
     public function addReferenceToData(ResourceObjectInterface $parent, LinkObjectInterface $current);
 
     /**
-     * Add an empty link to resource in 'data' section.
+     * Add an empty relationship to resource in 'data' section.
      *
      * @param ResourceObjectInterface $parent
      * @param LinkObjectInterface     $current
      *
      * @return void
      */
-    public function addEmptyLinkToData(ResourceObjectInterface $parent, LinkObjectInterface $current);
+    public function addEmptyRelationshipToData(ResourceObjectInterface $parent, LinkObjectInterface $current);
 
     /**
-     * Add a null link to resource in 'data' section.
+     * Add a null relationship to resource in 'data' section.
      *
      * @param ResourceObjectInterface $parent
      * @param LinkObjectInterface     $current
      *
      * @return void
      */
-    public function addNullLinkToData(ResourceObjectInterface $parent, LinkObjectInterface $current);
+    public function addNullRelationshipToData(ResourceObjectInterface $parent, LinkObjectInterface $current);
 
     /**
      * Add resource to 'included' section.
@@ -120,7 +120,7 @@ interface DocumentInterface
     public function addToIncluded(ResourceObjectInterface $resource);
 
     /**
-     * Add a link to resource in 'included' section.
+     * Add a relationship to resource in 'included' section.
      *
      * @param ResourceObjectInterface $parent
      * @param LinkObjectInterface     $link
@@ -128,7 +128,7 @@ interface DocumentInterface
      *
      * @return void
      */
-    public function addLinkToIncluded(
+    public function addRelationshipToIncluded(
         ResourceObjectInterface $parent,
         LinkObjectInterface $link,
         ResourceObjectInterface $resource
@@ -145,27 +145,27 @@ interface DocumentInterface
     public function addReferenceToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current);
 
     /**
-     * Add an empty link to resource in 'included' section.
+     * Add an empty relationship to resource in 'included' section.
      *
      * @param ResourceObjectInterface $parent
      * @param LinkObjectInterface     $current
      *
      * @return void
      */
-    public function addEmptyLinkToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current);
+    public function addEmptyRelationshipToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current);
 
     /**
-     * Add a null link to resource in 'included' section.
+     * Add a null relationship to resource in 'included' section.
      *
      * @param ResourceObjectInterface $parent
      * @param LinkObjectInterface     $current
      *
      * @return void
      */
-    public function addNullLinkToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current);
+    public function addNullRelationshipToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current);
 
     /**
-     * Mark resource as completed (no new links will be added to the resource anymore).
+     * Mark resource as completed (no new relations/links/etc will be added to the resource anymore).
      *
      * @param ResourceObjectInterface $resource
      *

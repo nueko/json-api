@@ -240,7 +240,7 @@ abstract class SchemaProvider implements SchemaProviderInterface
             $selfSubUrl    = $this->getValue($desc, self::SELF_SUB_URL, '/links/'.$name);
             $relatedSubUrl = $this->getValue($desc, self::RELATED_SUB_URL, '/'.$name);
 
-            yield $this->factory->createLinkObject(
+            yield $this->factory->createRelationshipObject(
                 $name,
                 $data,
                 $selfSubUrl,

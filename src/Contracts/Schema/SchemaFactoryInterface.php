@@ -64,7 +64,7 @@ interface SchemaFactoryInterface
     );
 
     /**
-     * Create link object.
+     * Create relationship object.
      *
      * @param string                        $name
      * @param object|array|null             $data
@@ -80,7 +80,7 @@ interface SchemaFactoryInterface
      *
      * @return LinkObjectInterface
      */
-    public function createLinkObject(
+    public function createRelationshipObject(
         $name,
         $data,
         $selfSubUrl,

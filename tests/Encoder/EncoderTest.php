@@ -112,11 +112,13 @@ EOL;
                         "first_name" : "Dan",
                         "last_name"  : "Gebhardt"
                     },
-                    "links" : {
-                        "self"     : "http://example.com/people/9",
+                    "relationships" : {
                         "comments" : {
                             "linkage" : { "type" : "people", "id" : "9" }
                         }
+                    },
+                    "links" : {
+                        "self"     : "http://example.com/people/9"
                     }
                 }, {
                     "type"       : "people",
@@ -125,11 +127,13 @@ EOL;
                         "first_name" : "Dan",
                         "last_name"  : "Gebhardt"
                     },
-                    "links" : {
-                        "self"     : "http://example.com/people/9",
+                    "relationships" : {
                         "comments" : {
                             "linkage" : { "type" : "people", "id" : "9" }
                         }
+                    },
+                    "links" : {
+                        "self" : "http://example.com/people/9"
                     }
                 }
             ]
@@ -217,8 +221,7 @@ EOL;
                     "title" : "JSON API paints my bikeshed!",
                     "body"  : "Outside every fat man there was an even fatter man trying to close in"
                 },
-                "links" : {
-                    "self" : "http://example.com/posts/1",
+                "relationships" : {
                     "author" : {
                         "linkage" : { "type" : "people", "id" : "9" }
                     },
@@ -228,6 +231,9 @@ EOL;
                             { "type":"comments", "id":"12" }
                         ]
                     }
+                },
+                "links" : {
+                    "self" : "http://example.com/posts/1"
                 }
             }
         }
@@ -263,10 +269,12 @@ EOL;
                     "title" : "JSON API paints my bikeshed!",
                     "body"  : "Outside every fat man there was an even fatter man trying to close in"
                 },
-                "links" : {
-                    "self"     : "http://example.com/posts/1",
+                "relationships" : {
                     "author"   : "http://example.com/posts/1/author",
                     "comments" : "http://example.com/posts/1/comments"
+                },
+                "links" : {
+                    "self"     : "http://example.com/posts/1"
                 }
             }
         }
@@ -302,10 +310,12 @@ EOL;
                     "title" : "JSON API paints my bikeshed!",
                     "body"  : "Outside every fat man there was an even fatter man trying to close in"
                 },
-                "links" : {
-                    "self"     : "http://example.com/posts/1",
+                "relationships" : {
                     "author"   : null,
                     "comments" : []
+                },
+                "links" : {
+                    "self"     : "http://example.com/posts/1"
                 }
             }
         }

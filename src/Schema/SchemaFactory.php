@@ -67,7 +67,7 @@ class SchemaFactory implements SchemaFactoryInterface
     /**
      * @inheritdoc
      */
-    public function createLinkObject(
+    public function createRelationshipObject(
         $name,
         $data,
         $selfSubUrl,

@@ -89,7 +89,7 @@ class FactoryTest extends BaseTestCase
      */
     public function testCreateLinkObject()
     {
-        $this->assertNotNull($link = $this->factory->createLinkObject(
+        $this->assertNotNull($link = $this->factory->createRelationshipObject(
             $name = 'link-name',
             $data = new stdClass(),
             $selfSubUrl = 'selfSubUrl',
