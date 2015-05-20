@@ -114,7 +114,7 @@ EOL;
                     },
                     "relationships" : {
                         "comments" : {
-                            "linkage" : { "type" : "people", "id" : "9" }
+                            "data" : { "type" : "people", "id" : "9" }
                         }
                     },
                     "links" : {
@@ -129,7 +129,7 @@ EOL;
                     },
                     "relationships" : {
                         "comments" : {
-                            "linkage" : { "type" : "people", "id" : "9" }
+                            "data" : { "type" : "people", "id" : "9" }
                         }
                     },
                     "links" : {
@@ -223,10 +223,10 @@ EOL;
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     },
                     "comments" : {
-                        "linkage" : [
+                        "data" : [
                             { "type":"comments", "id":"5" },
                             { "type":"comments", "id":"12" }
                         ]

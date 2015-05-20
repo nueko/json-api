@@ -45,7 +45,7 @@ class Document implements DocumentInterface
     /** Reserved keyword */
     const KEYWORD_RELATED       = 'related';
     /** Reserved keyword */
-    const KEYWORD_LINKAGE       = 'linkage';
+    const KEYWORD_LINKAGE_DATA  = self::KEYWORD_DATA;
     /** Reserved keyword */
     const KEYWORD_TYPE          = 'type';
     /** Reserved keyword */

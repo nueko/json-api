@@ -84,8 +84,8 @@ class ElementPresenter
                     $this->getLinkRepresentation($parent, $link, $resource);
             } else {
                 // ... or add another linkage
-                $target[$parentType][$parentId][Document::KEYWORD_RELATIONSHIPS][$name][Document::KEYWORD_LINKAGE][] =
-                    $this->getLinkageRepresentation($resource);
+                $target[$parentType][$parentId][Document::KEYWORD_RELATIONSHIPS]
+                    [$name][Document::KEYWORD_LINKAGE_DATA][] = $this->getLinkageRepresentation($resource);
             }
         }
     }
@@ -117,13 +117,13 @@ class ElementPresenter
     {
         if (empty($resource[Document::KEYWORD_RELATIONSHIPS]) === false) {
             foreach ($resource[Document::KEYWORD_RELATIONSHIPS] as &$relation) {
-                if (isset($relation[Document::KEYWORD_LINKAGE]) === true &&
-                    empty($relation[Document::KEYWORD_LINKAGE]) === false &&
-                    count($relation[Document::KEYWORD_LINKAGE]) === 1
+                if (isset($relation[Document::KEYWORD_LINKAGE_DATA]) === true &&
+                    empty($relation[Document::KEYWORD_LINKAGE_DATA]) === false &&
+                    count($relation[Document::KEYWORD_LINKAGE_DATA]) === 1
                 ) {
-                    $tmp = $relation[Document::KEYWORD_LINKAGE][0];
-                    unset($relation[Document::KEYWORD_LINKAGE][0]);
-                    $relation[Document::KEYWORD_LINKAGE] = $tmp;
+                    $tmp = $relation[Document::KEYWORD_LINKAGE_DATA][0];
+                    unset($relation[Document::KEYWORD_LINKAGE_DATA][0]);
+                    $relation[Document::KEYWORD_LINKAGE_DATA] = $tmp;
                 }
             }
         } else {
@@ -225,7 +225,7 @@ class ElementPresenter
         }
 
         if ($link->isShowLinkage() === true) {
-            $representation[Document::KEYWORD_LINKAGE][] = $this->getLinkageRepresentation($resource);
+            $representation[Document::KEYWORD_LINKAGE_DATA][] = $this->getLinkageRepresentation($resource);
         }
 
         if ($link->isShowMeta() === true) {

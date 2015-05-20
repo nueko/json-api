@@ -106,7 +106,7 @@ class EncodeSparseAndFieldSetsTest extends BaseTestCase
                 },
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }
@@ -124,7 +124,7 @@ class EncodeSparseAndFieldSetsTest extends BaseTestCase
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     }
                 },
                 "links" : {
@@ -138,7 +138,7 @@ class EncodeSparseAndFieldSetsTest extends BaseTestCase
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     }
                 },
                 "links" : {
@@ -153,10 +153,10 @@ class EncodeSparseAndFieldSetsTest extends BaseTestCase
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     },
                     "comments" : {
-                        "linkage" : [
+                        "data" : [
                             { "type" : "comments", "id" : "5" },
                             { "type" : "comments", "id" : "12" }
                         ]
@@ -199,7 +199,7 @@ EOL;
                 "id"    : "2",
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }

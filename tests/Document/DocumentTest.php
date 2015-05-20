@@ -289,8 +289,8 @@ EOL;
                             "related" : "peopleSelfUrl/relatedSubUrl",
                             "first"   : "/first"
                         },
-                        "linkage" : { "type" : "comments", "id" : "321" },
-                        "meta"    : { "some" : "comment meta" }
+                        "data" : { "type" : "comments", "id" : "321" },
+                        "meta" : { "some" : "comment meta" }
                     }
                 }
             }
@@ -359,7 +359,7 @@ EOL;
                 },
                 "relationships" : {
                     "comments-relationship" : {
-                        "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
+                        "data" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
                     }
                 }
             }
@@ -429,7 +429,7 @@ EOL;
                 },
                 "relationships" : {
                     "comments-relationship" : {
-                        "linkage" : [
+                        "data" : [
                             { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} },
                             { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
                         ]
@@ -832,8 +832,8 @@ EOL;
                             "self"    : "peopleSelfUrl/selfSubUrl",
                             "related" : "peopleSelfUrl/relatedSubUrl"
                         },
-                        "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} },
-                        "meta"    : { "some" : "comment meta" }
+                        "data" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} },
+                        "meta" : { "some" : "comment meta" }
                     }
                 },
                 "links" : {
@@ -909,7 +909,7 @@ EOL;
                 },
                 "relationships" : {
                     "comments-relationship" : {
-                        "linkage" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
+                        "data" : { "type" : "comments", "id" : "321", "meta" : {"some" : "comment meta"} }
                     }
                 },
                 "links" : {

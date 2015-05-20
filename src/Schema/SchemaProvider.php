@@ -41,8 +41,8 @@ abstract class SchemaProvider implements SchemaProviderInterface
     /** If 'related' URL should be shown. Requires 'related' controller to be set. */
     const SHOW_RELATED = 'related';
 
-    /** If linkage information should be shown. */
-    const SHOW_LINKAGE = 'showLinkage';
+    /** If data linkage information should be shown. */
+    const SHOW_DATA_LINKAGE = 'showDataLinkage';
 
     /** If link pagination information should be shown. */
     const SHOW_PAGINATION = 'showPagination';
@@ -233,7 +233,7 @@ abstract class SchemaProvider implements SchemaProviderInterface
             $isShowSelf    = ($this->getValue($desc, self::SHOW_SELF, false) === true);
             $isShowAsRef   = ($this->getValue($desc, self::SHOW_AS_REF, false) === true);
             $isShowRelated = ($this->getValue($desc, self::SHOW_RELATED, false) === true);
-            $isShowLinkage = ($this->getValue($desc, self::SHOW_LINKAGE, true) === true);
+            $isShowLinkage = ($this->getValue($desc, self::SHOW_DATA_LINKAGE, true) === true);
 
             list($isShowPagination, $pagination) = $this->readPagination($desc);
 

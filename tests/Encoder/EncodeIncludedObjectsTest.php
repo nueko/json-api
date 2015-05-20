@@ -105,10 +105,10 @@ class EncodeIncludedObjectsTest extends BaseTestCase
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     },
                     "comments" : {
-                        "linkage" : [
+                        "data" : [
                             { "type":"comments", "id":"5" },
                             { "type":"comments", "id":"12" }
                         ]
@@ -174,7 +174,7 @@ EOL;
                 "id"    : "2",
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }
@@ -192,7 +192,7 @@ EOL;
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     }
                 },
                 "links" : {
@@ -206,7 +206,7 @@ EOL;
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     }
                 },
                 "links" : {
@@ -246,7 +246,7 @@ EOL;
                 },
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }
@@ -303,7 +303,7 @@ EOL;
                 },
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }
@@ -322,7 +322,7 @@ EOL;
                 },
                 "relationships" : {
                     "author"   : {
-                        "linkage" : { "type" : "posts", "id" : "1" }
+                        "data" : { "type" : "posts", "id" : "1" }
                     },
                     "comments" : []
                 }
@@ -362,7 +362,7 @@ EOL;
                 },
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }
@@ -419,7 +419,7 @@ EOL;
                 },
                 "relationships" : {
                     "posts" : {
-                        "linkage" : {
+                        "data" : {
                             "type" : "posts",
                             "id" : "1"
                         }
@@ -438,10 +438,10 @@ EOL;
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     },
                     "comments" : {
-                        "linkage" : [
+                        "data" : [
                             { "type" : "comments", "id" : "5" },
                             { "type" : "comments", "id" : "12" }
                         ]
@@ -487,10 +487,10 @@ EOL;
                 },
                 "relationships" : {
                     "author" : {
-                        "linkage" : { "type" : "people", "id" : "9" }
+                        "data" : { "type" : "people", "id" : "9" }
                     },
                     "comments" : {
-                        "linkage" : [
+                        "data" : [
                             { "type" : "comments", "id" : "5" },
                             { "type" : "comments", "id" : "12" }
                         ],
