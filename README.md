@@ -58,7 +58,7 @@ Assuming you've got an ```$author``` of type ```\Author``` you can encode it to 
 
 ```php
 $encoder = Encoder::instance([
-    '\Author'  => '\AuthorSchema',
+    '\Author' => '\AuthorSchema',
 ], new JsonEncodeOptions(JSON_PRETTY_PRINT));
 
 echo $encoder->encode($author) . PHP_EOL;
