@@ -42,26 +42,14 @@ class MediaType implements MediaTypeInterface
     /**
      * @var array<string,string>|null
      */
-    private $mediaParameters;
-
-    /**
-     * @var float [0..1]
-     */
-    private $quality;
-
-    /**
-     * @var array<string,string>|null
-     */
-    private $extensionParameters;
+    private $parameters;
 
     /**
      * @param string                    $type
      * @param string                    $subType
-     * @param array<string,string>|null $mediaParameters
-     * @param float                     $quality
-     * @param array<string,string>|null $extensionParameters
+     * @param array<string,string>|null $parameters
      */
-    public function __construct($type, $subType, $mediaParameters = null, $quality = 1.0, $extensionParameters = null)
+    public function __construct($type, $subType, $parameters = null)
     {
         $type = trim($type);
         if (empty($type) === true) {
@@ -73,28 +61,15 @@ class MediaType implements MediaTypeInterface
             throw new InvalidArgumentException('subType');
         }
 
-        if ($mediaParameters !== null && is_array($mediaParameters) === false) {
-            throw new InvalidArgumentException('mediaParameters');
+        if ($parameters !== null && is_array($parameters) === false) {
+            throw new InvalidArgumentException('parameters');
         }
 
-        // rfc2616: 3 digits are meaningful (#3.9 Quality Values)
-        $quality = floor((float)$quality * 1000) / 1000;
-        if ($quality < 0 || $quality > 1) {
-            throw new InvalidArgumentException('quality');
-        }
-
-        if ($extensionParameters !== null && is_array($extensionParameters) === false) {
-            throw new InvalidArgumentException('extensionParameters');
-        }
-
-        $this->type                = $type;
-        $this->subType             = $subType;
-        $this->mediaType           = $type . '/' . $subType;
-        $this->mediaParameters     = $mediaParameters;
-        $this->quality             = $quality;
-        $this->extensionParameters = $extensionParameters;
+        $this->type       = $type;
+        $this->subType    = $subType;
+        $this->mediaType  = $type . '/' . $subType;
+        $this->parameters = $parameters;
     }
-
 
     /**
      * @inheritdoc
@@ -123,24 +98,41 @@ class MediaType implements MediaTypeInterface
     /**
      * @inheritdoc
      */
-    public function getMediaParameters()
+    public function getParameters()
     {
-        return $this->mediaParameters;
+        return $this->parameters;
     }
 
     /**
-     * @inheritdoc
+     * Parse media type.
+     *
+     * @param int    $position
+     * @param string $mediaType
+     *
+     * @return MediaType
      */
-    public function getQuality()
+    public static function parse($position, $mediaType)
     {
-        return $this->quality;
-    }
+        $position ?: null;
 
-    /**
-     * @inheritdoc
-     */
-    public function getExtensionParameters()
-    {
-        return $this->extensionParameters;
+        $fields = explode(';', $mediaType);
+
+        if (strpos($fields[0], '/') === false) {
+            throw new InvalidArgumentException('mediaType');
+        }
+
+        list($type, $subType) = explode('/', $fields[0], 2);
+
+        $parameters = null;
+        for ($idx = 1; $idx < count($fields); ++$idx) {
+            if (strpos($fields[$idx], '=') === false) {
+                throw new InvalidArgumentException('mediaType');
+            }
+
+            list($key, $value) = explode('=', $fields[$idx], 2);
+            $parameters[trim($key)] = trim($value, ' "');
+        }
+
+        return new MediaType($type, $subType, $parameters);
     }
 }

@@ -18,17 +18,6 @@
 
 /**
  * @package Neomerx\JsonApi
- *
- * A quick review of RFC 2616 (14.1 Accept)
- *
- * Accept header has the following structure
- *
- * Accept: type/subtype;media=parameters;q=1.0;extension="param1,param2", ... (other comma separated media types)
- *           ^    ^                      ^
- *           |    |                      |___ Special 'q' parameter sets quality factor and separates media(-range/type)
- *           |    |                           parameters from accept extension parameters.
- *           |    |
- *           ---------- Media type and subtype
  */
 interface MediaTypeInterface
 {
@@ -58,19 +47,5 @@ interface MediaTypeInterface
      *
      * @return array<string,string>|null
      */
-    public function getMediaParameters();
-
-    /**
-     * Get quality factor.
-     *
-     * @return float Quality factor [0 .. 1]
-     */
-    public function getQuality();
-
-    /**
-     * Get media type extension parameters.
-     *
-     * @return array<string,string>|null
-     */
-    public function getExtensionParameters();
+    public function getParameters();
 }

@@ -17,12 +17,12 @@
  */
 
 use \Neomerx\Tests\JsonApi\BaseTestCase;
-use \Neomerx\JsonApi\Parameters\Headers\MediaType;
+use \Neomerx\JsonApi\Parameters\Headers\AcceptMediaType;
 
 /**
  * @package Neomerx\Tests\JsonApi
  */
-class MediaTypeTest extends BaseTestCase
+class AcceptMediaTypeTest extends BaseTestCase
 {
     /**
      * Test invalid constructor parameters.
@@ -31,7 +31,7 @@ class MediaTypeTest extends BaseTestCase
      */
     public function testInvalidConstructorParams1()
     {
-        new MediaType(null, 'subtype');
+        new AcceptMediaType(1, null, 'subtype');
     }
 
     /**
@@ -41,7 +41,7 @@ class MediaTypeTest extends BaseTestCase
      */
     public function testInvalidConstructorParams2()
     {
-        new MediaType('type', null);
+        new AcceptMediaType(1, 'type', null);
     }
 
     /**
@@ -51,26 +51,36 @@ class MediaTypeTest extends BaseTestCase
      */
     public function testInvalidConstructorParams3()
     {
-        new MediaType('type', 'subtype', 123);
+        new AcceptMediaType(1, 'type', 'subtype', 123);
     }
 
     /**
-     * Test invalid parse parameters.
+     * Test invalid constructor parameters.
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidParseParams1()
+    public function testInvalidConstructorParams4()
     {
-        MediaType::parse(1, 'boo.bar+baz');
+        new AcceptMediaType(1, 'type', 'subtype', null, 5);
     }
 
     /**
-     * Test invalid parse parameters.
+     * Test invalid constructor parameters.
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidParseParams2()
+    public function testInvalidConstructorParams6()
     {
-        MediaType::parse(1, 'boo/bar+baz;param');
+        new AcceptMediaType(1, 'type', 'subtype', null, 0.4, 1234);
+    }
+
+    /**
+     * Test invalid constructor parameters.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidConstructorParams7()
+    {
+        new AcceptMediaType(-1, 'type', 'subtype', null, 0.4, null);
     }
 }

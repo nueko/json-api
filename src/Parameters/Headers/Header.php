@@ -16,7 +16,6 @@
  * limitations under the License.
  */
 
-use \Closure;
 use \InvalidArgumentException;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\HeaderInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\MediaTypeInterface;
@@ -38,23 +37,21 @@ class Header implements HeaderInterface
 
     /**
      * @param string $name
-     * @param MediaTypeInterface[] $unsortedMediaTypes
+     * @param MediaTypeInterface[] $mediaTypes
      */
-    public function __construct($name, $unsortedMediaTypes)
+    public function __construct($name, $mediaTypes)
     {
         $name = trim($name);
         if (empty($name) === true) {
             throw new InvalidArgumentException('name');
         }
 
-        if (is_array($unsortedMediaTypes) ===  false) {
-            throw new InvalidArgumentException('unsortedMediaTypes');
+        if (is_array($mediaTypes) ===  false) {
+            throw new InvalidArgumentException('mediaTypes');
         }
 
-        usort($unsortedMediaTypes, $this->getMediaTypeCompareClosure());
-
         $this->name       = $name;
-        $this->mediaTypes = $unsortedMediaTypes;
+        $this->mediaTypes = $mediaTypes;
     }
 
     /**
@@ -68,230 +65,42 @@ class Header implements HeaderInterface
     /**
      * @inheritdoc
      */
-    public function getSortedMediaTypes()
+    public function getMediaTypes()
     {
         return $this->mediaTypes;
     }
 
     /**
-     * Get best media type match for available media types.
-     *
-     * @param MediaTypeInterface[] $availableMediaTypes
-     *
-     * @return MediaTypeInterface|null
-     */
-    public function getBestMatch($availableMediaTypes)
-    {
-        if (is_array($availableMediaTypes) === false) {
-            throw new InvalidArgumentException('availableMediaTypes');
-        }
-
-        foreach ($this->getSortedMediaTypes() as $headerMediaType) {
-            foreach ($availableMediaTypes as $availableMediaType) {
-                if ($this->mediaTypeMatchTo($availableMediaType, $headerMediaType) === true) {
-                    return $availableMediaType;
-                }
-            }
-        }
-
-        return null;
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function mediaTypeMatchTo(MediaTypeInterface $specificType, MediaTypeInterface $mightBeTemplateType)
-    {
-        return
-            $this->isTypeMatches($specificType, $mightBeTemplateType) &&
-            $this->isSubTypeMatches($specificType, $mightBeTemplateType) &&
-            $this->isMediaParametersMatch($specificType, $mightBeTemplateType);
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function isTypeMatches(MediaTypeInterface $specificType, MediaTypeInterface $mightBeTemplateType)
-    {
-        return
-            $specificType->getType() === $mightBeTemplateType->getType() ||
-            $mightBeTemplateType->getType() === '*';
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function isSubTypeMatches(MediaTypeInterface $specificType, MediaTypeInterface $mightBeTemplateType)
-    {
-        return
-            $specificType->getSubType() === $mightBeTemplateType->getSubType() ||
-            $mightBeTemplateType->getSubType() === '*';
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function isMediaParametersMatch(MediaTypeInterface $specificType, MediaTypeInterface $mightBeTemplateType)
-    {
-        if ($specificType->getMediaParameters() === null && $mightBeTemplateType->getMediaParameters() === null) {
-            return true;
-        } elseif ($specificType->getMediaParameters() !== null && $mightBeTemplateType->getMediaParameters() !== null) {
-            $count     = count($specificType->getMediaParameters());
-            $intersect = array_intersect(
-                $specificType->getMediaParameters(),
-                $mightBeTemplateType->getMediaParameters()
-            );
-
-            return ($count === count($intersect));
-        }
-
-        return false;
-    }
-
-    /**
-     * @return Closure
-     */
-    private function getMediaTypeCompareClosure()
-    {
-        return function (MediaTypeInterface $lhs, MediaTypeInterface $rhs) {
-            $qualityCompare = $this->compareQuality($lhs->getQuality(), $rhs->getQuality());
-            if ($qualityCompare !== 0) {
-                return $qualityCompare;
-            }
-
-            $typeCompare = $this->compareStrings($lhs->getType(), $rhs->getType());
-            if ($typeCompare !== 0) {
-                return $typeCompare;
-            }
-
-            $subTypeCompare = $this->compareStrings($lhs->getSubType(), $rhs->getSubType());
-            if ($subTypeCompare !== 0) {
-                return $subTypeCompare;
-            }
-
-            return $this->compareParameters($lhs->getMediaParameters(), $rhs->getMediaParameters());
-        };
-    }
-
-    /**
-     * @param float $lhs
-     * @param float $rhs
-     *
-     * @return int
-     */
-    private function compareQuality($lhs, $rhs)
-    {
-        $qualityDiff = $lhs - $rhs;
-
-        // rfc2616: 3 digits are meaningful (#3.9 Quality Values)
-        if (abs($qualityDiff) < 0.001) {
-            return 0;
-        } else {
-            return $lhs > $rhs ? -1 : 1;
-        }
-    }
-
-    /**
-     * @param string $lhs
-     * @param string $rhs
-     *
-     * @return int
-     */
-    private function compareStrings($lhs, $rhs)
-    {
-        return ($rhs !== '*' ? 1 : 0) - ($lhs !== '*' ? 1 : 0);
-    }
-
-    /**
-     * @param array|null $lhs
-     * @param array|null $rhs
-     *
-     * @return int
-     */
-    private function compareParameters($lhs, $rhs)
-    {
-        return (empty($lhs) !== false ? 1 : 0) - (empty($rhs) !== false ? 1 : 0);
-    }
-
-    /**
      * Parse header.
      *
+     * @param string $name
      * @param string $header
      *
      * @return HeaderInterface
      */
-    public static function parse($header)
+    public static function parse($name, $header)
     {
-        $input  = explode(':', $header, 2);
-
-        if (isset($input[1]) === false) {
+        if (is_string($name) === false || empty($name) === true) {
             throw new InvalidArgumentException('header');
         }
 
         $mediaTypes = [];
-        $name       = $input[0];
-        $ranges     = preg_split("/,(?=([^\"]*\"[^\"]*\")*[^\"]*$)/", $input[1]);
-        foreach ($ranges as $range) {
-            $fields = explode(';', $range);
-
-            if (strpos($fields[0], '/') === false) {
-                throw new InvalidArgumentException('header');
-            }
-
-            list($type, $subType) = explode('/', $fields[0], 2);
-            list($mediaParameters, $quality, $extensionParameters) = self::parseQualityAndParameters($fields);
-
-            $mediaTypes[] = new MediaType($type, $subType, $mediaParameters, $quality, $extensionParameters);
+        $ranges     = preg_split("/,(?=([^\"]*\"[^\"]*\")*[^\"]*$)/", $header);
+        for ($idx = 0; $idx < count($ranges); ++$idx) {
+            $mediaTypes[] = static::parseMediaType($idx, $ranges[$idx]);
         }
 
-        return new self($name, $mediaTypes);
+        return new static($name, $mediaTypes);
     }
 
     /**
-     * @param string $fields
+     * @param int    $position
+     * @param string $mediaType
      *
-     * @return array
+     * @return MediaTypeInterface
      */
-    private static function parseQualityAndParameters($fields)
+    protected static function parseMediaType($position, $mediaType)
     {
-        $quality             = 1;
-        $qParamFound         = false;
-        $mediaParameters     = null;
-        $extensionParameters = null;
-
-        for ($idx = 1; $idx < count($fields); ++$idx) {
-            if (strpos($fields[$idx], '=') === false) {
-                throw new InvalidArgumentException('header');
-            }
-
-            list($key, $value) = explode('=', $fields[$idx], 2);
-
-            $key   = trim($key);
-            $value = trim($value, ' "');
-
-            // 'q' param separates media parameters from extension parameters
-
-            if ($key === 'q' && $qParamFound === false) {
-                $quality     = (float)$value;
-                $qParamFound = true;
-                continue;
-            }
-
-            $qParamFound === false ? $mediaParameters[$key] = $value : $extensionParameters[$key] = $value;
-        }
-
-        return [$mediaParameters, $quality, $extensionParameters];
+        return MediaType::parse($position, $mediaType);
     }
 }

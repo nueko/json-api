@@ -19,19 +19,21 @@
 /**
  * @package Neomerx\JsonApi
  */
-interface HeaderInterface
+interface AcceptHeaderInterface extends HeaderInterface
 {
     /**
-     * Get header name.
+     * Get sorted/ranged media types (by quality factor, type, subtype and extensions).
      *
-     * @return string
-     */
-    public function getName();
-
-    /**
-     * Get media types.
-     *
-     * @return MediaTypeInterface[]
+     * @return AcceptMediaTypeInterface[]
      */
     public function getMediaTypes();
+
+    /**
+     * Get best media type match for available media types.
+     *
+     * @param AcceptMediaTypeInterface[] $availableMediaTypes
+     *
+     * @return MediaTypeInterface|null
+     */
+    public function getBestMatch($availableMediaTypes);
 }
