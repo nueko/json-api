@@ -28,7 +28,7 @@ use \Neomerx\JsonApi\Contracts\Parameters\Headers\AcceptMediaTypeInterface;
 class AcceptHeader extends Header implements AcceptHeaderInterface
 {
     /**
-     * @param string $name
+     * @param string                     $name
      * @param AcceptMediaTypeInterface[] $unsortedMediaTypes
      */
     public function __construct($name, $unsortedMediaTypes)
@@ -59,7 +59,7 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
         foreach ($this->getMediaTypes() as $headerMediaType) {
             /** @var AcceptMediaTypeInterface $headerMediaType */
             foreach ($availableMediaTypes as $availableMediaType) {
-                if ($this->mediaTypeMatchTo($availableMediaType, $headerMediaType) === true) {
+                if ($availableMediaType->matchesTo($headerMediaType) === true) {
                     return $availableMediaType;
                 }
             }
@@ -116,77 +116,6 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
 
             return ($lhs->getPosition() - $rhs->getPosition());
         };
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function mediaTypeMatchTo(
-        MediaTypeInterface $specificType,
-        MediaTypeInterface $mightBeTemplateType
-    ) {
-        return
-            $this->isTypeMatches($specificType, $mightBeTemplateType) &&
-            $this->isSubTypeMatches($specificType, $mightBeTemplateType) &&
-            $this->isMediaParametersMatch($specificType, $mightBeTemplateType);
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function isTypeMatches(
-        MediaTypeInterface $specificType,
-        MediaTypeInterface $mightBeTemplateType
-    ) {
-        return
-            $specificType->getType() === $mightBeTemplateType->getType() ||
-            $mightBeTemplateType->getType() === '*';
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function isSubTypeMatches(
-        MediaTypeInterface $specificType,
-        MediaTypeInterface $mightBeTemplateType
-    ) {
-        return
-            $specificType->getSubType() === $mightBeTemplateType->getSubType() ||
-            $mightBeTemplateType->getSubType() === '*';
-    }
-
-    /**
-     * @param MediaTypeInterface $specificType
-     * @param MediaTypeInterface $mightBeTemplateType
-     *
-     * @return bool
-     */
-    private function isMediaParametersMatch(
-        MediaTypeInterface $specificType,
-        MediaTypeInterface $mightBeTemplateType
-    ) {
-        if ($specificType->getParameters() === null && $mightBeTemplateType->getParameters() === null) {
-            return true;
-        } elseif ($specificType->getParameters() !== null && $mightBeTemplateType->getParameters() !== null) {
-            $count     = count($specificType->getParameters());
-            $intersect = array_intersect(
-                $specificType->getParameters(),
-                $mightBeTemplateType->getParameters()
-            );
-
-            return ($count === count($intersect));
-        }
-
-        return false;
     }
 
     /**

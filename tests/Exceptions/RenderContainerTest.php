@@ -25,6 +25,7 @@ use \Neomerx\JsonApi\Document\Error;
 use \Neomerx\JsonApi\Encoder\Encoder;
 use \Neomerx\Tests\JsonApi\BaseTestCase;
 use \Neomerx\JsonApi\Exceptions\RenderContainer;
+use \Neomerx\JsonApi\Parameters\ParametersFactory;
 use \Neomerx\JsonApi\Contracts\Exceptions\RenderContainerInterface;
 use \Neomerx\JsonApi\Contracts\Integration\NativeResponsesInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\SupportedExtensionsInterface;
@@ -65,7 +66,12 @@ class RenderContainerTest extends BaseTestCase
         /** @var NativeResponsesInterface $mockResponses */
         $mockResponses = $this->mockResponses;
 
-        $this->container = new RenderContainer($mockResponses, $extensionsClosure, self::DEFAULT_CODE);
+        $this->container = new RenderContainer(
+            new ParametersFactory(),
+            $mockResponses,
+            $extensionsClosure,
+            self::DEFAULT_CODE
+        );
     }
 
     /**

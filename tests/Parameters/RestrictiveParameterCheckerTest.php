@@ -17,18 +17,17 @@
  */
 
 use \Mockery;
-use \Exception;
 use \Mockery\MockInterface;
 use \Neomerx\Tests\JsonApi\BaseTestCase;
-use \Neomerx\JsonApi\Codec\CodecContainer;
-use \Neomerx\JsonApi\Parameters\MediaType;
+use \Neomerx\JsonApi\Codec\CodecMatcher;
+use \Neomerx\JsonApi\Parameters\Headers\MediaType;
 use \Neomerx\JsonApi\Parameters\ParametersFactory;
 use \Neomerx\JsonApi\Parameters\RestrictiveParameterChecker;
-use \Neomerx\JsonApi\Contracts\Codec\CodecContainerInterface;
-use \Neomerx\JsonApi\Contracts\Parameters\MediaTypeInterface;
+use \Neomerx\JsonApi\Contracts\Codec\CodecMatcherInterface;
 use \Neomerx\JsonApi\Contracts\Integration\CurrentRequestInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\ParametersParserInterface;
 use \Neomerx\JsonApi\Contracts\Integration\ExceptionThrowerInterface;
+use \Neomerx\JsonApi\Contracts\Parameters\Headers\MediaTypeInterface;
 
 /**
  * @package Neomerx\Tests\JsonApi
@@ -36,7 +35,13 @@ use \Neomerx\JsonApi\Contracts\Integration\ExceptionThrowerInterface;
 class RestrictiveParameterCheckerTest extends BaseTestCase
 {
     /** JSON API type */
-    const TYPE = CodecContainerInterface::JSON_API_TYPE;
+    const JSON_API_TYPE = MediaTypeInterface::JSON_API_MEDIA_TYPE;
+
+    /** JSON API type */
+    const TYPE = MediaTypeInterface::JSON_API_TYPE;
+
+    /** JSON API type */
+    const SUB_TYPE = MediaTypeInterface::JSON_API_SUB_TYPE;
 
     /**
      * @var ParametersParserInterface
@@ -81,16 +86,10 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
      */
     public function testDefaultNotReallyRestrictiveSettings()
     {
-        $checker = new RestrictiveParameterChecker(
-            $this->prepareExceptions(),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext2']],
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext1,ext3']]
-            )
-        );
+        $checker = $this->getCheckerWithExtensions();
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -102,16 +101,14 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
      */
     public function testAllowedExtensions()
     {
-        $checker = new RestrictiveParameterChecker(
-            $this->prepareExceptions(),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext2']],
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext1,ext3']]
-            )
-        );
+        $checker = $this->getCheckerWithExtensions();
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE.';ext=ext2', self::TYPE.';ext="ext1,ext3"', $this->requestParams),
+            $this->prepareRequest(
+                self::JSON_API_TYPE.';ext=ext2',
+                self::JSON_API_TYPE.';ext="ext1,ext3"',
+                $this->requestParams
+            ),
             $this->prepareExceptions()
         );
 
@@ -123,16 +120,10 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
      */
     public function testNotAllowedInputExtensions()
     {
-        $checker = new RestrictiveParameterChecker(
-            $this->prepareExceptions('throwUnsupportedMediaType'),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext2']],
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext1,ext3']]
-            )
-        );
+        $checker = $this->getCheckerWithExtensions('throwUnsupportedMediaType');
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE.';ext=ext4', self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE.';ext=ext4', self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -144,16 +135,10 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
      */
     public function testNotAllowedOutputExtensions()
     {
-        $checker = new RestrictiveParameterChecker(
-            $this->prepareExceptions('throwNotAcceptable'),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext2']],
-                [self::TYPE => [MediaTypeInterface::NO_EXT, 'ext1,ext3']]
-            )
-        );
+        $checker = $this->getCheckerWithExtensions('throwNotAcceptable');
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE.';ext="ext2,ext3"', $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE.';ext="ext2,ext3"', $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -167,16 +152,16 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     {
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions(),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false,
             ['author', 'comments', 'comments.author', 'and.one.more.path']
         );
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -190,16 +175,16 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     {
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions('throwBadRequest'),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false,
             ['author', 'comments']
         );
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -213,9 +198,9 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     {
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions(),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false,
             null,
@@ -223,7 +208,7 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
         );
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -237,9 +222,9 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     {
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions('throwBadRequest'),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false,
             null,
@@ -247,7 +232,7 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
         );
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -262,9 +247,9 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
         $allowedSortParams = ['created', 'title', 'name', 'and-others'];
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions(),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false,
             null,
@@ -273,7 +258,7 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
         );
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -288,9 +273,9 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
         $allowedSortParams = ['created', 'name']; // in input will be 'title' which is not on the list
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions('throwBadRequest'),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false,
             null,
@@ -299,7 +284,7 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
         );
 
         $parameters = $this->parser->parse(
-            $this->prepareRequest(self::TYPE, self::TYPE, $this->requestParams),
+            $this->prepareRequest(self::JSON_API_TYPE, self::JSON_API_TYPE, $this->requestParams),
             $this->prepareExceptions()
         );
 
@@ -313,17 +298,17 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     {
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions(),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             true
         );
 
         $parameters = $this->parser->parse(
             $this->prepareRequest(
-                self::TYPE,
-                self::TYPE,
+                self::JSON_API_TYPE,
+                self::JSON_API_TYPE,
                 array_merge($this->requestParams, ['some' => ['other', 'parameters']])
             ),
             $this->prepareExceptions()
@@ -339,17 +324,17 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     {
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions('throwBadRequest'),
-            $this->prepareCodecContainer(
-                [self::TYPE => [MediaTypeInterface::NO_EXT]],
-                [self::TYPE => [MediaTypeInterface::NO_EXT]]
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null]],
+                [[self::TYPE, self::SUB_TYPE, null]]
             ),
             false
         );
 
         $parameters = $this->parser->parse(
             $this->prepareRequest(
-                self::TYPE,
-                self::TYPE,
+                self::JSON_API_TYPE,
+                self::JSON_API_TYPE,
                 array_merge($this->requestParams, ['some' => ['other', 'parameters']])
             ),
             $this->prepareExceptions()
@@ -398,29 +383,56 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
      * @param array $decoders
      * @param array $encoders
      *
-     * @return CodecContainerInterface
+     * @return CodecMatcherInterface
      */
-    private function prepareCodecContainer(array $decoders, array $encoders)
+    private function prepareCodecMatcher(array $decoders, array $encoders)
     {
-        $container = new CodecContainer();
+        $matcher = new CodecMatcher();
         $codecClosure = function () {
-            throw new Exception('Encoder or decoder should not be created during this test');
+            return 'Codec result';
         };
 
-        foreach ($decoders as $type => $extensions) {
-            foreach ($extensions as $extensionsItem) {
-                $mediaType = new MediaType($type, $extensionsItem);
-                $container->registerDecoder($mediaType, $codecClosure);
-            }
+        foreach ($decoders as list($type, $subType, $parameters)) {
+            $mediaType = new MediaType($type, $subType, $parameters);
+            $matcher->registerDecoder($mediaType, $codecClosure);
         }
 
-        foreach ($encoders as $type => $extensions) {
-            foreach ($extensions as $extensionsItem) {
-                $mediaType = new MediaType($type, $extensionsItem);
-                $container->registerEncoder($mediaType, $codecClosure);
-            }
+        foreach ($encoders as list($type, $subType, $parameters)) {
+            $mediaType = new MediaType($type, $subType, $parameters);
+            $matcher->registerEncoder($mediaType, $codecClosure);
         }
 
-        return $container;
+        return $matcher;
+    }
+
+    /**
+     * @param string|null $exceptionMethod
+     *
+     * @return RestrictiveParameterChecker
+     */
+    private function getCheckerWithExtensions($exceptionMethod = null)
+    {
+        $checker = new RestrictiveParameterChecker(
+            $this->prepareExceptions($exceptionMethod),
+            $this->prepareCodecMatcher(
+                [
+                    [self::TYPE, self::SUB_TYPE, null],
+                    [self::TYPE, self::SUB_TYPE, ['ext' => 'ext2']],
+                ],
+                [
+                    [self::TYPE, self::SUB_TYPE, null],
+                    [self::TYPE, self::SUB_TYPE, ['ext' => 'ext1,ext3']],
+                ]
+            ),
+            false,
+            null,
+            null,
+            null,
+            null,
+            null,
+            true
+        );
+
+        return $checker;
     }
 }

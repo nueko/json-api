@@ -126,6 +126,10 @@ class AcceptMediaType extends MediaType implements AcceptMediaTypeInterface
         $extensions  = null;
 
         for ($idx = 1; $idx < count($fields); ++$idx) {
+            if (empty($fields[$idx]) === true) {
+                continue;
+            }
+
             if (strpos($fields[$idx], '=') === false) {
                 throw new InvalidArgumentException('mediaType');
             }

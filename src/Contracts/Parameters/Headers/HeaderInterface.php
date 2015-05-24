@@ -21,6 +21,15 @@
  */
 interface HeaderInterface
 {
+    /** Header name that contains format of output data from client */
+    const HEADER_ACCEPT = 'Accept';
+
+    /** Header name that contains format of input data from client */
+    const HEADER_CONTENT_TYPE = 'Content-Type';
+
+    /** Header name that location of newly created resource */
+    const HEADER_LOCATION = 'Location';
+
     /**
      * Get header name.
      *

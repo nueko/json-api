@@ -104,6 +104,28 @@ class MediaType implements MediaTypeInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function matchesTo(MediaTypeInterface $mediaType)
+    {
+        return
+            $this->isTypeMatches($mediaType) &&
+            $this->isSubTypeMatches($mediaType) &&
+            $this->isMediaParametersEqual($mediaType);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function equalsTo(MediaTypeInterface $mediaType)
+    {
+        return
+            $this->isTypeEquals($mediaType) &&
+            $this->isSubTypeEquals($mediaType) &&
+            $this->isMediaParametersEqual($mediaType);
+    }
+
+    /**
      * Parse media type.
      *
      * @param int    $position
@@ -134,5 +156,62 @@ class MediaType implements MediaTypeInterface
         }
 
         return new MediaType($type, $subType, $parameters);
+    }
+
+    /**
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    private function isTypeMatches(MediaTypeInterface $mediaType)
+    {
+        return $this->getType() === $mediaType->getType() || $mediaType->getType() === '*';
+    }
+
+    /**
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    private function isTypeEquals(MediaTypeInterface $mediaType)
+    {
+        return $this->getType() === $mediaType->getType();
+    }
+
+    /**
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    private function isSubTypeMatches(MediaTypeInterface $mediaType)
+    {
+        return $this->getSubType() === $mediaType->getSubType() || $mediaType->getSubType() === '*';
+    }
+
+    /**
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    private function isSubTypeEquals(MediaTypeInterface $mediaType)
+    {
+        return $this->getSubType() === $mediaType->getSubType();
+    }
+
+    /**
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    private function isMediaParametersEqual(MediaTypeInterface $mediaType)
+    {
+        if ($this->getParameters() === null && $mediaType->getParameters() === null) {
+            return true;
+        } elseif ($this->getParameters() !== null && $mediaType->getParameters() !== null) {
+            $intersect = array_intersect($this->getParameters(), $mediaType->getParameters());
+            return (count($this->getParameters()) === count($intersect));
+        }
+
+        return false;
     }
 }

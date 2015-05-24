@@ -31,9 +31,9 @@ interface AcceptHeaderInterface extends HeaderInterface
     /**
      * Get best media type match for available media types.
      *
-     * @param AcceptMediaTypeInterface[] $availableMediaTypes
+     * @param MediaTypeInterface[] $availableMediaTypes
      *
-     * @return MediaTypeInterface|null
+     * @return AcceptMediaTypeInterface|null
      */
     public function getBestMatch($availableMediaTypes);
 }

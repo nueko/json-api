@@ -21,6 +21,24 @@
  */
 interface MediaTypeInterface
 {
+    /** JSON API type */
+    const JSON_API_MEDIA_TYPE = 'application/vnd.api+json';
+
+    /** JSON API type */
+    const JSON_API_TYPE = 'application';
+
+    /** JSON API type */
+    const JSON_API_SUB_TYPE = 'vnd.api+json';
+
+    /** Parameter name for storing supported extensions in Content-Type header */
+    const PARAM_SUPPORTED_EXT = 'supported-ext';
+
+    /** Parameter name for storing applied extensions in Content-Type header */
+    const PARAM_EXT = 'ext';
+
+    /** Constant for 'no-extensions' */
+    const NO_EXT = '';
+
     /**
      * Get media type (no subtype).
      *
@@ -48,4 +66,22 @@ interface MediaTypeInterface
      * @return array<string,string>|null
      */
     public function getParameters();
+
+    /**
+     * Compare media types.
+     *
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    public function matchesTo(MediaTypeInterface $mediaType);
+
+    /**
+     * Compare media types.
+     *
+     * @param MediaTypeInterface $mediaType
+     *
+     * @return bool
+     */
+    public function equalsTo(MediaTypeInterface $mediaType);
 }
