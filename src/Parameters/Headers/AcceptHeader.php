@@ -18,7 +18,6 @@
 
 use \Closure;
 use \InvalidArgumentException;
-use \Neomerx\JsonApi\Contracts\Parameters\Headers\MediaTypeInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\AcceptHeaderInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\AcceptMediaTypeInterface;
 
@@ -28,10 +27,9 @@ use \Neomerx\JsonApi\Contracts\Parameters\Headers\AcceptMediaTypeInterface;
 class AcceptHeader extends Header implements AcceptHeaderInterface
 {
     /**
-     * @param string                     $name
      * @param AcceptMediaTypeInterface[] $unsortedMediaTypes
      */
-    public function __construct($name, $unsortedMediaTypes)
+    public function __construct($unsortedMediaTypes)
     {
 
         if (is_array($unsortedMediaTypes) ===  false) {
@@ -40,32 +38,7 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
 
         usort($unsortedMediaTypes, $this->getMediaTypeCompareClosure());
 
-        parent::__construct($name, $unsortedMediaTypes);
-    }
-
-    /**
-     * Get best media type match for available media types.
-     *
-     * @param MediaTypeInterface[] $availableMediaTypes
-     *
-     * @return AcceptMediaTypeInterface|null
-     */
-    public function getBestMatch($availableMediaTypes)
-    {
-        if (is_array($availableMediaTypes) === false) {
-            throw new InvalidArgumentException('availableMediaTypes');
-        }
-
-        foreach ($this->getMediaTypes() as $headerMediaType) {
-            /** @var AcceptMediaTypeInterface $headerMediaType */
-            foreach ($availableMediaTypes as $availableMediaType) {
-                if ($availableMediaType->matchesTo($headerMediaType) === true) {
-                    return $availableMediaType;
-                }
-            }
-        }
-
-        return null;
+        parent::__construct(self::HEADER_ACCEPT, $unsortedMediaTypes);
     }
 
     /**
@@ -73,9 +46,9 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
      *
      * @return AcceptHeaderInterface
      */
-    public static function parse($name, $header)
+    public static function parse($header)
     {
-        return parent::parse($name, $header);
+        return parent::parse(self::HEADER_ACCEPT, $header);
     }
 
     /**
@@ -86,6 +59,16 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
     protected static function parseMediaType($position, $mediaType)
     {
         return AcceptMediaType::parse($position, $mediaType);
+    }
+
+    /**
+     * @inheritdoc
+     *
+     * @return Header
+     */
+    protected static function newInstance($name, $mediaTypes)
+    {
+        return new static($mediaTypes);
     }
 
     /**

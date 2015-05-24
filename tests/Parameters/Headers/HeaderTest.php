@@ -74,6 +74,16 @@ class HeaderTest extends BaseTestCase
      */
     public function testInvalidParams2()
     {
-        new Header('name', null);
+        new Header(null, []);
+    }
+
+    /**
+     * Test invalid parameters.
+     *
+     * @expectedException \InvalidArgumentException
+     */
+    public function testInvalidParams3()
+    {
+        Header::parse('', '');
     }
 }

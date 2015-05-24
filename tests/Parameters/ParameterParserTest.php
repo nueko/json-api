@@ -128,6 +128,8 @@ class ParameterParserTest extends BaseTestCase
 
     /**
      * Test miss field in sort params.
+     *
+     * @expectedException \Exception
      */
     public function testSendIncorrectSortParams()
     {
@@ -222,17 +224,69 @@ class ParameterParserTest extends BaseTestCase
     }
 
     /**
+     * Test parse headers when 'Accept' header is not given.
+     */
+    public function testParseWithEmptyAcceptHeader()
+    {
+        $parameters = $this->parser->parse(
+            $this->prepareRequest(self::TYPE, '', []),
+            $this->prepareExceptions()
+        );
+
+        $accept = $parameters->getAcceptHeader();
+        $this->assertCount(1, $accept->getMediaTypes());
+        $this->assertEquals(self::TYPE, $accept->getMediaTypes()[0]->getMediaType());
+    }
+
+    /**
+     * Test parse invalid headers.
+     *
+     * @expectedException \Exception
+     */
+    public function testParseIvalidHeaders1()
+    {
+        $this->parser->parse(
+            $this->prepareRequest(self::TYPE.';foo', self::TYPE, [], 1, 0, 0),
+            $this->prepareExceptions('throwBadRequest')
+        );
+    }
+
+    /**
+     * Test parse invalid headers.
+     *
+     * @expectedException \Exception
+     */
+    public function testParseIvalidHeaders2()
+    {
+        $this->parser->parse(
+            $this->prepareRequest(self::TYPE, self::TYPE.';foo', [], 1, 1, 0),
+            $this->prepareExceptions('throwBadRequest')
+        );
+    }
+
+    /**
      * @param string $contentType
      * @param string $accept
      * @param array  $input
+     * @param int    $contentTypeTimes
+     * @param int    $acceptTimes
+     * @param int    $parametersTimes
      *
      * @return CurrentRequestInterface
      */
-    private function prepareRequest($contentType, $accept, array $input)
-    {
-        $this->mockRequest->shouldReceive('getHeader')->with('Content-Type')->once()->andReturn($contentType);
-        $this->mockRequest->shouldReceive('getHeader')->with('Accept')->once()->andReturn($accept);
-        $this->mockRequest->shouldReceive('getQueryParameters')->withNoArgs()->once()->andReturn($input);
+    private function prepareRequest(
+        $contentType,
+        $accept,
+        array $input,
+        $contentTypeTimes = 1,
+        $acceptTimes = 1,
+        $parametersTimes = 1
+    ) {
+        $this->mockRequest->shouldReceive('getHeader')->with('Content-Type')
+            ->times($contentTypeTimes)->andReturn($contentType);
+        $this->mockRequest->shouldReceive('getHeader')->with('Accept')->times($acceptTimes)->andReturn($accept);
+        $this->mockRequest->shouldReceive('getQueryParameters')
+            ->withNoArgs()->times($parametersTimes)->andReturn($input);
 
         /** @var CurrentRequestInterface $request */
         $request = $this->mockRequest;
@@ -248,7 +302,7 @@ class ParameterParserTest extends BaseTestCase
     private function prepareExceptions($exceptionMethod = null)
     {
         if ($exceptionMethod !== null) {
-            $this->mockThrower->shouldReceive($exceptionMethod)->atLeast(1)->withNoArgs()->andReturnUndefined();
+            $this->mockThrower->shouldReceive($exceptionMethod)->atLeast(1)->withNoArgs()->andThrow(new \Exception());
         }
 
         /** @var ExceptionThrowerInterface $exceptions */

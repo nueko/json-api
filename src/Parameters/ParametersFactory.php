@@ -111,8 +111,8 @@ class ParametersFactory implements ParametersFactoryInterface
     /**
      * @inheritdoc
      */
-    public function createAcceptHeader($name, $unsortedMediaTypes)
+    public function createAcceptHeader($unsortedMediaTypes)
     {
-        return new AcceptHeader($name, $unsortedMediaTypes);
+        return new AcceptHeader($unsortedMediaTypes);
     }
 }

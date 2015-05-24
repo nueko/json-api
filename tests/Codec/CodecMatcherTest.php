@@ -28,7 +28,7 @@ use \Neomerx\JsonApi\Contracts\Parameters\Headers\MediaTypeInterface;
 /**
  * @package Neomerx\Tests\JsonApi
  */
-class CodecContainerTest extends BaseTestCase
+class CodecMatcherTest extends BaseTestCase
 {
     /**
      * @var CodecMatcherInterface
@@ -81,13 +81,12 @@ class CodecContainerTest extends BaseTestCase
     public function testMatchNoParams()
     {
         $acceptHeader = AcceptHeader::parse(
-            HeaderInterface::HEADER_ACCEPT,
             'type1/subtype1;q=1.0, type1/subtype1;ext=ext1;q=0.8, */*;q=0.1'
         );
         $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1/subtype1');
 
         $this->codecMatcher->matchEncoder($acceptHeader);
-        $this->codecMatcher->matchDecoder($contentTypeHeader);
+        $this->codecMatcher->findDecoder($contentTypeHeader);
 
         $this->assertEquals('enc-type1-no-ext', $this->codecMatcher->getEncoder());
         $this->assertEquals('type1/subtype1', $this->codecMatcher->getEncoderHeaderMatchedType()->getMediaType());
@@ -106,13 +105,12 @@ class CodecContainerTest extends BaseTestCase
     public function testMatchWithParams()
     {
         $acceptHeader = AcceptHeader::parse(
-            HeaderInterface::HEADER_ACCEPT,
             'type1/subtype1;q=0.8, type1/subtype1;ext=ext1;q=1.0, */*;q=0.1'
         );
         $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1/subtype1;ext="ext1"');
 
         $this->codecMatcher->matchEncoder($acceptHeader);
-        $this->codecMatcher->matchDecoder($contentTypeHeader);
+        $this->codecMatcher->findDecoder($contentTypeHeader);
 
         $this->assertEquals('enc-type1-ext1', $this->codecMatcher->getEncoder());
         $this->assertEquals('type1/subtype1', $this->codecMatcher->getEncoderHeaderMatchedType()->getMediaType());
@@ -131,13 +129,12 @@ class CodecContainerTest extends BaseTestCase
     public function testNoMatch1()
     {
         $acceptHeader = AcceptHeader::parse(
-            HeaderInterface::HEADER_ACCEPT,
             'type1-XXX/subtype1;q=0.8, type1-XXX/subtype1;ext=ext1;q=1.0, */*;q=0.1'
         );
         $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1-XXX/subtype1;ext="ext1"');
 
         $this->codecMatcher->matchEncoder($acceptHeader);
-        $this->codecMatcher->matchDecoder($contentTypeHeader);
+        $this->codecMatcher->findDecoder($contentTypeHeader);
 
         $this->assertEquals('enc-type1-no-ext', $this->codecMatcher->getEncoder());
         $this->assertEquals('*/*', $this->codecMatcher->getEncoderHeaderMatchedType()->getMediaType());
@@ -155,13 +152,12 @@ class CodecContainerTest extends BaseTestCase
     public function testNoMatch2()
     {
         $acceptHeader = AcceptHeader::parse(
-            HeaderInterface::HEADER_ACCEPT,
             'type1-XXX/subtype1;q=0.8, type1-XXX/subtype1;ext=ext1;q=1.0'
         );
         $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1-XXX/subtype1;ext="ext1"');
 
         $this->codecMatcher->matchEncoder($acceptHeader);
-        $this->codecMatcher->matchDecoder($contentTypeHeader);
+        $this->codecMatcher->findDecoder($contentTypeHeader);
 
         $this->assertNull($this->codecMatcher->getEncoder());
         $this->assertNull($this->codecMatcher->getEncoderHeaderMatchedType());
@@ -170,5 +166,120 @@ class CodecContainerTest extends BaseTestCase
         $this->assertNull($this->codecMatcher->getDecoder());
         $this->assertNull($this->codecMatcher->getDecoderHeaderMatchedType());
         $this->assertNull($this->codecMatcher->getDecoderRegisteredMatchedType());
+    }
+
+    /**
+     * Test get best match.
+     */
+    public function testGetBestMatch1()
+    {
+        $matcher = $this->getTestCodecMatcher();
+        $matcher->matchEncoder(AcceptHeader::parse('type1/subtype2'));
+        $best = $matcher->getEncoderRegisteredMatchedType();
+
+        $this->assertEquals('type1/subtype2', $best->getMediaType());
+        $this->assertEquals(null, $best->getParameters());
+    }
+
+    /**
+     * Test get best match.
+     */
+    public function testGetBestMatch2()
+    {
+        $matcher = $this->getTestCodecMatcher();
+        $matcher->matchEncoder(
+            AcceptHeader::parse('type1/subtype2;q=0.4, type1/subtype2;ext="ext1,ext3";q=0.8')
+        );
+        $best = $matcher->getEncoderRegisteredMatchedType();
+
+        $this->assertEquals('type1/subtype2', $best->getMediaType());
+        $this->assertEquals(['ext' => 'ext1,ext3'], $best->getParameters());
+    }
+
+    /**
+     * Test get best match.
+     */
+    public function testGetBestMatch3()
+    {
+        $matcher = $this->getTestCodecMatcher();
+        $matcher->matchEncoder(AcceptHeader::parse('type1/*;ext="ext1,ext3"'));
+        $best = $matcher->getEncoderRegisteredMatchedType();
+
+        $this->assertEquals('type1/subtype2', $best->getMediaType());
+        $this->assertEquals(['ext' => 'ext1,ext3'], $best->getParameters());
+    }
+
+    /**
+     * Test get best match.
+     */
+    public function testGetBestMatch4()
+    {
+        $matcher = $this->getTestCodecMatcher();
+        $matcher->matchEncoder(AcceptHeader::parse('*/*;ext="ext1,ext3"'));
+        $best = $matcher->getEncoderRegisteredMatchedType();
+
+        $this->assertEquals('type1/subtype2', $best->getMediaType());
+        $this->assertEquals(['ext' => 'ext1,ext3'], $best->getParameters());
+    }
+
+    /**
+     * Test get best match.
+     */
+    public function testGetBestMatch6()
+    {
+        $matcher = $this->getTestCodecMatcher();
+        $matcher->matchEncoder(AcceptHeader::parse('type2/*'));
+        $best = $matcher->getEncoderRegisteredMatchedType();
+
+        $this->assertEquals('type2/subtype1', $best->getMediaType());
+        $this->assertEquals(null, $best->getParameters());
+    }
+
+    /**
+     * Test get best match.
+     */
+    public function testGetBestMatch7()
+    {
+        $matcher = $this->getTestCodecMatcher();
+        $matcher->matchEncoder(AcceptHeader::parse('type2/*;ext="ext1,ext3"'));
+        $best = $matcher->getEncoderRegisteredMatchedType();
+
+        $this->assertNull($best);
+    }
+
+    /**
+     * When 'q' === 0.0 it means this type is not acceptable. Test it works this way.
+     */
+    public function testMatchWithZeroQ()
+    {
+        $matcher = $this->getTestCodecMatcher();
+
+        $header = 'type1/subtype2;ext="ext1,ext3"';
+
+        $matcher->matchEncoder(AcceptHeader::parse($header));
+        $this->assertNotNull($matcher->getEncoderRegisteredMatchedType());
+
+        $header .= ';q=0';
+
+        $matcher->matchEncoder(AcceptHeader::parse($header));
+        $this->assertNull($matcher->getEncoderRegisteredMatchedType());
+    }
+
+    /**
+     * @return CodecMatcherInterface
+     */
+    private function getTestCodecMatcher()
+    {
+        $matcher = new CodecMatcher();
+
+        $fakeEncoderClosure = function () {
+        };
+
+        $matcher->registerEncoder(new MediaType('type1', 'subtype1'), $fakeEncoderClosure);
+        $matcher->registerEncoder(new MediaType('type1', 'subtype2'), $fakeEncoderClosure);
+        $matcher->registerEncoder(new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']), $fakeEncoderClosure);
+        $matcher->registerEncoder(new MediaType('type2', 'subtype1'), $fakeEncoderClosure);
+
+        return $matcher;
     }
 }

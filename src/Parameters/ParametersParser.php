@@ -87,14 +87,14 @@ class ParametersParser implements ParametersParserInterface
         try {
             $headerString = $request->getHeader(HeaderInterface::HEADER_ACCEPT);
             if (empty($headerString) === false) {
-                $acceptHeader = AcceptHeader::parse(HeaderInterface::HEADER_ACCEPT, $headerString);
+                $acceptHeader = AcceptHeader::parse($headerString);
             } else {
                 $jsonMediaType = $this->factory->createAcceptMediaType(
                     0,
                     MediaTypeInterface::JSON_API_TYPE,
                     MediaTypeInterface::JSON_API_SUB_TYPE
                 );
-                $acceptHeader  = $this->factory->createAcceptHeader(HeaderInterface::HEADER_ACCEPT, [$jsonMediaType]);
+                $acceptHeader  = $this->factory->createAcceptHeader([$jsonMediaType]);
             }
         } catch (InvalidArgumentException $exception) {
             $this->exceptionThrower->throwBadRequest();

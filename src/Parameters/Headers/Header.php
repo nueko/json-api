@@ -36,7 +36,7 @@ class Header implements HeaderInterface
     private $mediaTypes;
 
     /**
-     * @param string $name
+     * @param string               $name
      * @param MediaTypeInterface[] $mediaTypes
      */
     public function __construct($name, $mediaTypes)
@@ -90,7 +90,7 @@ class Header implements HeaderInterface
             $mediaTypes[] = static::parseMediaType($idx, $ranges[$idx]);
         }
 
-        return new static($name, $mediaTypes);
+        return static::newInstance($name, $mediaTypes);
     }
 
     /**
@@ -102,5 +102,16 @@ class Header implements HeaderInterface
     protected static function parseMediaType($position, $mediaType)
     {
         return MediaType::parse($position, $mediaType);
+    }
+
+    /**
+     * @param string               $name
+     * @param MediaTypeInterface[] $mediaTypes
+     *
+     * @return Header
+     */
+    protected static function newInstance($name, $mediaTypes)
+    {
+        return new static($name, $mediaTypes);
     }
 }

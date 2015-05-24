@@ -17,7 +17,6 @@
  */
 
 use \Neomerx\Tests\JsonApi\BaseTestCase;
-use \Neomerx\JsonApi\Parameters\Headers\MediaType;
 use \Neomerx\JsonApi\Parameters\Headers\AcceptHeader;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\HeaderInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\MediaTypeInterface;
@@ -37,7 +36,7 @@ class AcceptHeaderTest extends BaseTestCase
             'type/*',
             '*/*',
             'foo/bar.baz',
-        ], $header = AcceptHeader::parse('Accept', $input));
+        ], $header = AcceptHeader::parse($input));
 
         $this->assertEquals('Accept', $header->getName());
 
@@ -71,7 +70,7 @@ class AcceptHeaderTest extends BaseTestCase
         $this->checkSorting([
             'type1/*',
             'type2/*',
-        ], $header = AcceptHeader::parse('Accept', $input));
+        ], $header = AcceptHeader::parse($input));
 
         $params = [
             $header->getMediaTypes()[0]->getMediaType() => $header->getMediaTypes()[0]->getQuality(),
@@ -91,7 +90,7 @@ class AcceptHeaderTest extends BaseTestCase
         $this->checkSorting([
             'type2/*',
             'type1/*',
-        ], $header = AcceptHeader::parse('Accept', $input));
+        ], $header = AcceptHeader::parse($input));
 
         $params = [
             $header->getMediaTypes()[0]->getMediaType() => $header->getMediaTypes()[0]->getQuality(),
@@ -110,7 +109,7 @@ class AcceptHeaderTest extends BaseTestCase
         $this->checkSorting([
             'audio/basic',
             'audio/*',
-        ], $header = AcceptHeader::parse('Accept', $input));
+        ], $header = AcceptHeader::parse($input));
     }
 
     /**
@@ -125,7 +124,7 @@ class AcceptHeaderTest extends BaseTestCase
             'text/x-c',
             'text/x-dvi',
             'text/plain',
-        ], $header = AcceptHeader::parse('Accept', $input));
+        ], $header = AcceptHeader::parse($input));
 
         $this->assertEquals('text/x-dvi', $header->getMediaTypes()[2]->getMediaType());
         $this->assertEquals('text/plain', $header->getMediaTypes()[3]->getMediaType());
@@ -142,7 +141,7 @@ class AcceptHeaderTest extends BaseTestCase
             'text/html',
             'text/*',
             '*/*',
-        ], $header = AcceptHeader::parse('Accept', $input));
+        ], $header = AcceptHeader::parse($input));
 
         $this->assertEquals(['level' => '1'], $header->getMediaTypes()[0]->getParameters());
         $this->assertEquals(null, $header->getMediaTypes()[1]->getParameters());
@@ -154,7 +153,7 @@ class AcceptHeaderTest extends BaseTestCase
     public function testParseHeaderRfcSample4()
     {
         $input = 'text/*;q=0.3, text/html;q=0.7, text/html;level=1, text/html;level=2;q=0.4, */*;q=0.5';
-        $header = AcceptHeader::parse('Accept', $input);
+        $header = AcceptHeader::parse($input);
         $this->checkSorting([
             'text/html',
             'text/html',
@@ -169,7 +168,7 @@ class AcceptHeaderTest extends BaseTestCase
      */
     public function testInvalidHeader1()
     {
-        AcceptHeader::parse('Accept', null);
+        AcceptHeader::parse(null);
     }
 
     /**
@@ -177,7 +176,7 @@ class AcceptHeaderTest extends BaseTestCase
      */
     public function testInvalidHeader2()
     {
-        AcceptHeader::parse('Accept', '');
+        AcceptHeader::parse('');
     }
 
     /**
@@ -185,15 +184,7 @@ class AcceptHeaderTest extends BaseTestCase
      */
     public function testInvalidHeader3()
     {
-        AcceptHeader::parse(null, 'foo/bar.bas');
-    }
-
-    /**
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidHeader4()
-    {
-        AcceptHeader::parse('Accept', 'foo/bar; baz');
+        AcceptHeader::parse('foo/bar; baz');
     }
 
     /**
@@ -201,143 +192,9 @@ class AcceptHeaderTest extends BaseTestCase
      *
      * @expectedException \InvalidArgumentException
      */
-    public function testInvalidConstructorParams1()
+    public function testInvalidConstructorParams()
     {
-        new AcceptHeader(null, []);
-    }
-
-    /**
-     * Test invalid constructor parameters.
-     *
-     * @expectedException \InvalidArgumentException
-     */
-    public function testInvalidConstructorParams2()
-    {
-        new AcceptHeader('name', null);
-    }
-
-    /**
-     * Test get best match.
-     */
-    public function testGetBestMatch1()
-    {
-        $availableTypes = [
-            new MediaType('type1', 'subtype1'),
-            new MediaType('type1', 'subtype2'),
-            new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']),
-            new MediaType('type2', 'subtype1'),
-        ];
-
-        $header = AcceptHeader::parse('Accept', 'type1/subtype2');
-
-        $best = $header->getBestMatch($availableTypes);
-        $this->assertEquals('type1/subtype2', $best->getMediaType());
-        $this->assertEquals(null, $best->getParameters());
-    }
-
-    /**
-     * Test get best match.
-     */
-    public function testGetBestMatch2()
-    {
-        $availableTypes = [
-            new MediaType('type1', 'subtype1'),
-            new MediaType('type1', 'subtype2'),
-            new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']),
-            new MediaType('type2', 'subtype1'),
-        ];
-
-        $header = AcceptHeader::parse('Accept', 'type1/subtype2;q=0.4, type1/subtype2;ext="ext1,ext3";q=0.8');
-
-        $best = $header->getBestMatch($availableTypes);
-        $this->assertEquals('type1/subtype2', $best->getMediaType());
-        $this->assertEquals(['ext' => 'ext1,ext3'], $best->getParameters());
-    }
-
-    /**
-     * Test get best match.
-     */
-    public function testGetBestMatch3()
-    {
-        $availableTypes = [
-            new MediaType('type1', 'subtype1'),
-            new MediaType('type1', 'subtype2'),
-            new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']),
-            new MediaType('type2', 'subtype1'),
-        ];
-
-        $header = AcceptHeader::parse('Accept', 'type1/*;ext="ext1,ext3"');
-
-        $best = $header->getBestMatch($availableTypes);
-        $this->assertEquals('type1/subtype2', $best->getMediaType());
-        $this->assertEquals(['ext' => 'ext1,ext3'], $best->getParameters());
-    }
-
-    /**
-     * Test get best match.
-     */
-    public function testGetBestMatch4()
-    {
-        $availableTypes = [
-            new MediaType('type1', 'subtype1'),
-            new MediaType('type1', 'subtype2'),
-            new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']),
-            new MediaType('type2', 'subtype1'),
-        ];
-
-        $header = AcceptHeader::parse('Accept', '*/*;ext="ext1,ext3"');
-
-        $best = $header->getBestMatch($availableTypes);
-        $this->assertEquals('type1/subtype2', $best->getMediaType());
-        $this->assertEquals(['ext' => 'ext1,ext3'], $best->getParameters());
-    }
-
-    /**
-     * Test get best match.
-     */
-    public function testGetBestMatch6()
-    {
-        $availableTypes = [
-            new MediaType('type1', 'subtype1'),
-            new MediaType('type1', 'subtype2'),
-            new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']),
-            new MediaType('type2', 'subtype1'),
-        ];
-
-        $header = AcceptHeader::parse('Accept', 'type2/*');
-
-        $best = $header->getBestMatch($availableTypes);
-        $this->assertEquals('type2/subtype1', $best->getMediaType());
-        $this->assertEquals(null, $best->getParameters());
-    }
-
-    /**
-     * Test get best match.
-     */
-    public function testGetBestMatch7()
-    {
-        $availableTypes = [
-            new MediaType('type1', 'subtype1'),
-            new MediaType('type1', 'subtype2'),
-            new MediaType('type1', 'subtype2', ['ext' => 'ext1,ext3']),
-            new MediaType('type2', 'subtype1'),
-        ];
-
-        $header = AcceptHeader::parse('Accept', 'type2/*;ext="ext1,ext3"');
-
-        $best = $header->getBestMatch($availableTypes);
-        $this->assertNull($best);
-    }
-
-    /**
-     * Test get best match.
-     *
-     * @expectedException \InvalidArgumentException
-     */
-    public function testGetBestMatchInvalidParam()
-    {
-        $header = AcceptHeader::parse('Accept', 'type2/*;ext="ext1,ext3"');
-        $header->getBestMatch(null);
+        new AcceptHeader(null);
     }
 
     /**

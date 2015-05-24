@@ -157,7 +157,12 @@ class RestrictiveParameterChecker implements ParameterCheckerInterface
      */
     protected function checkContentTypeHeader(ParametersInterface $parameters)
     {
-        $this->codecMatcher->matchDecoder($parameters->getContentTypeHeader());
+        // Do not allow specify more than 1 media type for input data. Otherwise which one is correct?
+        if (count($parameters->getContentTypeHeader()->getMediaTypes()) > 1) {
+            $this->exceptionThrower->throwBadRequest();
+        }
+
+        $this->codecMatcher->findDecoder($parameters->getContentTypeHeader());
 
         // From spec: servers MUST return a 415 Unsupported Media Type status code if
         // the application/vnd.api+json media type is modified by the ext parameter

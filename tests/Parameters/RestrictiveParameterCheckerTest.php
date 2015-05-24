@@ -344,6 +344,75 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     }
 
     /**
+     * Test check too many media types in 'Content-Type' header.
+     */
+    public function testTooManyMediaTypesInContentType()
+    {
+        $checker = $this->getCheckerWithExtensions();
+
+        $parameters = $this->parser->parse(
+            $this->prepareRequest(
+                self::JSON_API_TYPE.', one-more/media-type',
+                self::JSON_API_TYPE,
+                $this->requestParams
+            ),
+            $this->prepareExceptions('throwBadRequest')
+        );
+
+        $checker->check($parameters);
+    }
+
+    /**
+     * Test it should throw exception if 'ext' param is set but extensions are not allowed.
+     */
+    public function testExtentionsNotAllowed1()
+    {
+        $checker = new RestrictiveParameterChecker(
+            $this->prepareExceptions(),
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, [MediaTypeInterface::PARAM_EXT => 'foo']],],
+                [[self::TYPE, self::SUB_TYPE, null],]
+            )
+        );
+
+        $parameters = $this->parser->parse(
+            $this->prepareRequest(
+                self::JSON_API_TYPE . ';' . MediaTypeInterface::PARAM_EXT . '=foo',
+                self::JSON_API_TYPE,
+                $this->requestParams
+            ),
+            $this->prepareExceptions('throwUnsupportedMediaType')
+        );
+
+        $checker->check($parameters);
+    }
+
+    /**
+     * Test it should throw exception if 'ext' param is set but extensions are not allowed.
+     */
+    public function testExtentionsNotAllowed2()
+    {
+        $checker = new RestrictiveParameterChecker(
+            $this->prepareExceptions(),
+            $this->prepareCodecMatcher(
+                [[self::TYPE, self::SUB_TYPE, null],],
+                [[self::TYPE, self::SUB_TYPE, [MediaTypeInterface::PARAM_EXT => 'foo']],]
+            )
+        );
+
+        $parameters = $this->parser->parse(
+            $this->prepareRequest(
+                self::JSON_API_TYPE,
+                self::JSON_API_TYPE . ';' . MediaTypeInterface::PARAM_EXT . '=foo',
+                $this->requestParams
+            ),
+            $this->prepareExceptions('throwNotAcceptable')
+        );
+
+        $checker->check($parameters);
+    }
+
+    /**
      * @param string $contentType
      * @param string $accept
      * @param array  $input

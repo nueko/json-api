@@ -119,14 +119,17 @@ class CodecMatcher implements CodecMatcherInterface
     public function matchEncoder(AcceptHeaderInterface $acceptHeader)
     {
         foreach ($acceptHeader->getMediaTypes() as $headerMediaType) {
-            /** @var MediaTypeInterface $registeredType */
-            foreach ($this->outputMediaTypes as list($registeredType, $closure)) {
-                if ($registeredType->matchesTo($headerMediaType) === true) {
-                    $this->encoderHeaderMatchedType     = $headerMediaType;
-                    $this->encoderRegisteredMatchedType = $registeredType;
-                    $this->foundEncoder                 = $closure();
+            // if quality factor 'q' === 0 it means this type is not acceptable (RFC 2616 #3.9)
+            if ($headerMediaType->getQuality() > 0) {
+                /** @var MediaTypeInterface $registeredType */
+                foreach ($this->outputMediaTypes as list($registeredType, $closure)) {
+                    if ($registeredType->matchesTo($headerMediaType) === true) {
+                        $this->encoderHeaderMatchedType     = $headerMediaType;
+                        $this->encoderRegisteredMatchedType = $registeredType;
+                        $this->foundEncoder                 = $closure();
 
-                    return;
+                        return;
+                    }
                 }
             }
         }
@@ -137,13 +140,13 @@ class CodecMatcher implements CodecMatcherInterface
     }
 
     /**
-     * Find best decoder match for 'Content-Type' header.
+     * Find decoder with media type equal to media type in 'Content-Type' header.
      *
      * @param HeaderInterface $contentTypeHeader
      *
      * @return void
      */
-    public function matchDecoder(HeaderInterface $contentTypeHeader)
+    public function findDecoder(HeaderInterface $contentTypeHeader)
     {
         foreach ($contentTypeHeader->getMediaTypes() as $headerMediaType) {
             /** @var MediaTypeInterface $registeredType */

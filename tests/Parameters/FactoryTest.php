@@ -18,6 +18,7 @@
 
 use \Mockery;
 use \Neomerx\Tests\JsonApi\BaseTestCase;
+use \Neomerx\JsonApi\Parameters\Headers\MediaType;
 use \Neomerx\JsonApi\Parameters\ParametersFactory;
 use \Neomerx\JsonApi\Contracts\Parameters\SortParameterInterface;
 use \Neomerx\JsonApi\Contracts\Parameters\Headers\HeaderInterface;
@@ -135,5 +136,36 @@ class FactoryTest extends BaseTestCase
         ));
 
         $this->assertEquals($extensions, $supported->getExtensions());
+    }
+
+    /**
+     * Test create media type for 'Accept' header.
+     */
+    public function testCreateAcceptMediaType()
+    {
+        $mediaType = $this->factory->createAcceptMediaType(
+            $position = 3,
+            $type = 'type',
+            $subType = 'subType',
+            $parameters = ['param' => 'value'],
+            $quality = 0.7,
+            $extensions = ['extension' => 'value']
+        );
+
+        $this->assertNotNull($mediaType);
+        $this->assertEquals($position, $mediaType->getPosition());
+        $this->assertEquals($type, $mediaType->getType());
+        $this->assertEquals($subType, $mediaType->getSubType());
+        $this->assertEquals($parameters, $mediaType->getParameters());
+        $this->assertEquals($quality, $mediaType->getQuality());
+        $this->assertEquals($extensions, $mediaType->getExtensions());
+    }
+
+    public function testCreateAcceptHeader()
+    {
+        $header = $this->factory->createAcceptHeader([new MediaType('type', 'subType')]);
+        $this->assertNotNull($header);
+        $this->assertCount(1, $header->getMediaTypes());
+        $this->assertEquals('type/subType', $header->getMediaTypes()[0]->getMediaType());
     }
 }

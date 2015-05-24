@@ -122,10 +122,9 @@ interface ParametersFactoryInterface
     /**
      * Create Accept HTTP header.
      *
-     * @param string                     $name
      * @param AcceptMediaTypeInterface[] $unsortedMediaTypes
      *
      * @return AcceptHeaderInterface
      */
-    public function createAcceptHeader($name, $unsortedMediaTypes);
+    public function createAcceptHeader($unsortedMediaTypes);
 }
