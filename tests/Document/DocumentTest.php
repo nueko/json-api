@@ -1188,6 +1188,41 @@ EOL;
     }
 
     /**
+     * Test unset data.
+     */
+    public function testUnsetData()
+    {
+        $this->document->setMetaToDocument([
+            "some" => "values",
+        ]);
+
+        $this->document->addToData($resource = $this->schemaFactory->createResourceObject(
+            true,
+            'people',
+            '123',
+            ['firstName' => 'John', 'lastName' => 'Dow'],
+            ['some' => 'meta'],
+            'selfUrl',
+            true,
+            true,
+            false,
+            false,
+            false,
+            false
+        ));
+        $this->document->setResourceCompleted($resource);
+
+        $this->document->unsetData();
+
+        $expected = <<<EOL
+        {
+            "meta" : { "some" : "values" }
+        }
+EOL;
+        $this->check($expected);
+    }
+
+    /**
      * @param string $expected
      */
     private function check($expected)

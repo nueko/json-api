@@ -136,6 +136,19 @@ class Encoder implements EncoderInterface
     }
 
     /**
+     * @inheritdoc
+     */
+    public function meta($meta)
+    {
+        $docWriter = $this->documentFactory->createDocument();
+
+        $docWriter->setMetaToDocument($meta);
+        $docWriter->unsetData();
+
+        return $this->encodeToJson($docWriter->getDocument());
+    }
+
+    /**
      * Encode array to JSON.
      *
      * @param array $document

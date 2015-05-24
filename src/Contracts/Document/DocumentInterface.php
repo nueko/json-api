@@ -185,6 +185,13 @@ interface DocumentInterface
     public function addError(ErrorInterface $error);
 
     /**
+     * Remove 'data' top-level section.
+     *
+     * @return void
+     */
+    public function unsetData();
+
+    /**
      * Get document as array.
      *
      * @return array

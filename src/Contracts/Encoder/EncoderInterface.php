@@ -41,6 +41,14 @@ interface EncoderInterface
         $meta = null,
         EncodingParametersInterface $parameters = null
     );
+    /**
+     * Encode input meta as JSON API string.
+     *
+     * @param array|object $meta Meta information.
+     *
+     * @return string
+     */
+    public function meta($meta);
 
     /**
      * Encode error as JSON API string.

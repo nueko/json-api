@@ -131,6 +131,11 @@ class Document implements DocumentInterface
     private $presenter;
 
     /**
+     * @var bool
+     */
+    private $showData = true;
+
+    /**
      * Constructor.
      */
     public function __construct()
@@ -315,10 +320,22 @@ class Document implements DocumentInterface
             return $value !== null;
         });
 
-        $isDataNotArray = ($this->isDataArrayed === false && empty($this->data) === false);
-        $document[self::KEYWORD_DATA] = ($isDataNotArray ? $this->data[0] : $this->data);
+        if ($this->showData === true) {
+            $isDataNotArray               = ($this->isDataArrayed === false && empty($this->data) === false);
+            $document[self::KEYWORD_DATA] = ($isDataNotArray ? $this->data[0] : $this->data);
+        } else {
+            unset($document[self::KEYWORD_DATA]);
+        }
 
         return $document;
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function unsetData()
+    {
+        $this->showData = false;
     }
 
     /**
