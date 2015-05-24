@@ -30,7 +30,7 @@ class HeaderTest extends BaseTestCase
     public function testParseHeaderNameAndQualityAndParameters()
     {
         $input  = ' foo/bar.baz;media=param;q=0.5;ext="ext1,ext2", type/*, */*';
-        $header = Header::parse('Content-Type', $input);
+        $header = Header::parse($input, 'Content-Type');
 
         $this->assertEquals('Content-Type', $header->getName());
 

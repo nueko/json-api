@@ -83,7 +83,7 @@ class CodecMatcherTest extends BaseTestCase
         $acceptHeader = AcceptHeader::parse(
             'type1/subtype1;q=1.0, type1/subtype1;ext=ext1;q=0.8, */*;q=0.1'
         );
-        $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1/subtype1');
+        $contentTypeHeader = Header::parse('type1/subtype1', HeaderInterface::HEADER_CONTENT_TYPE);
 
         $this->codecMatcher->matchEncoder($acceptHeader);
         $this->codecMatcher->findDecoder($contentTypeHeader);
@@ -107,7 +107,7 @@ class CodecMatcherTest extends BaseTestCase
         $acceptHeader = AcceptHeader::parse(
             'type1/subtype1;q=0.8, type1/subtype1;ext=ext1;q=1.0, */*;q=0.1'
         );
-        $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1/subtype1;ext="ext1"');
+        $contentTypeHeader = Header::parse('type1/subtype1;ext="ext1"', HeaderInterface::HEADER_CONTENT_TYPE);
 
         $this->codecMatcher->matchEncoder($acceptHeader);
         $this->codecMatcher->findDecoder($contentTypeHeader);
@@ -131,7 +131,7 @@ class CodecMatcherTest extends BaseTestCase
         $acceptHeader = AcceptHeader::parse(
             'type1-XXX/subtype1;q=0.8, type1-XXX/subtype1;ext=ext1;q=1.0, */*;q=0.1'
         );
-        $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1-XXX/subtype1;ext="ext1"');
+        $contentTypeHeader = Header::parse('type1-XXX/subtype1;ext="ext1"', HeaderInterface::HEADER_CONTENT_TYPE);
 
         $this->codecMatcher->matchEncoder($acceptHeader);
         $this->codecMatcher->findDecoder($contentTypeHeader);
@@ -154,7 +154,7 @@ class CodecMatcherTest extends BaseTestCase
         $acceptHeader = AcceptHeader::parse(
             'type1-XXX/subtype1;q=0.8, type1-XXX/subtype1;ext=ext1;q=1.0'
         );
-        $contentTypeHeader = Header::parse(HeaderInterface::HEADER_CONTENT_TYPE, 'type1-XXX/subtype1;ext="ext1"');
+        $contentTypeHeader = Header::parse('type1-XXX/subtype1;ext="ext1"', HeaderInterface::HEADER_CONTENT_TYPE);
 
         $this->codecMatcher->matchEncoder($acceptHeader);
         $this->codecMatcher->findDecoder($contentTypeHeader);

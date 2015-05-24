@@ -77,8 +77,8 @@ class ParametersParser implements ParametersParserInterface
 
         try {
             $contentTypeHeader = Header::parse(
-                HeaderInterface::HEADER_CONTENT_TYPE,
-                $request->getHeader(HeaderInterface::HEADER_CONTENT_TYPE)
+                $request->getHeader(HeaderInterface::HEADER_CONTENT_TYPE),
+                HeaderInterface::HEADER_CONTENT_TYPE
             );
         } catch (InvalidArgumentException $exception) {
             $this->exceptionThrower->throwBadRequest();

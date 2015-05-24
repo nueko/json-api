@@ -46,9 +46,9 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
      *
      * @return AcceptHeaderInterface
      */
-    public static function parse($header)
+    public static function parse($header, $accept = self::HEADER_ACCEPT)
     {
-        return parent::parse(self::HEADER_ACCEPT, $header);
+        return parent::parse($header, self::HEADER_ACCEPT);
     }
 
     /**
@@ -68,6 +68,7 @@ class AcceptHeader extends Header implements AcceptHeaderInterface
      */
     protected static function newInstance($name, $mediaTypes)
     {
+        /** @var AcceptMediaTypeInterface[] $mediaTypes */
         return new static($mediaTypes);
     }
 

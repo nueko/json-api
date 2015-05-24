@@ -73,12 +73,12 @@ class Header implements HeaderInterface
     /**
      * Parse header.
      *
-     * @param string $name
      * @param string $header
+     * @param string $name
      *
      * @return HeaderInterface
      */
-    public static function parse($name, $header)
+    public static function parse($header, $name)
     {
         if (is_string($name) === false || empty($name) === true) {
             throw new InvalidArgumentException('header');
