@@ -76,7 +76,7 @@ class ResourceObject implements ResourceObjectInterface
     /**
      * @var bool
      */
-    private $isShowMetaInLinkage;
+    private $isShowMetaInRlShips;
 
     /**
      * @var bool
@@ -95,7 +95,7 @@ class ResourceObject implements ResourceObjectInterface
      * @param bool   $isShowSelfInIncluded
      * @param bool   $isShowLinksInIncluded
      * @param bool   $isShowMetaInIncluded
-     * @param bool   $isShowMetaInLinkage
+     * @param bool   $isShowMetaInRlShips
      */
     public function __construct(
         $isInArray,
@@ -109,11 +109,11 @@ class ResourceObject implements ResourceObjectInterface
         $isShowSelfInIncluded,
         $isShowLinksInIncluded,
         $isShowMetaInIncluded,
-        $isShowMetaInLinkage
+        $isShowMetaInRlShips
     ) {
         assert(
             'is_bool($isInArray) && is_string($type) && is_string($idx) && is_array($attributes) &&'.
-            'is_string($selfUrl) && is_bool($isShowSelf) && is_bool($isShowMeta) && is_bool($isShowMetaInLinkage) &&'.
+            'is_string($selfUrl) && is_bool($isShowSelf) && is_bool($isShowMeta) && is_bool($isShowMetaInRlShips) &&'.
             'is_bool($isShowSelfInIncluded) && is_bool($isShowLinksInIncluded) && is_bool($isShowMetaInIncluded)'
         );
 
@@ -128,7 +128,7 @@ class ResourceObject implements ResourceObjectInterface
         $this->isShowSelfInIncluded  = $isShowSelfInIncluded;
         $this->isShowLinksInIncluded = $isShowLinksInIncluded;
         $this->isShowMetaInIncluded  = $isShowMetaInIncluded;
-        $this->isShowMetaInLinkage   = $isShowMetaInLinkage;
+        $this->isShowMetaInRlShips   = $isShowMetaInRlShips;
     }
 
     /**
@@ -206,9 +206,9 @@ class ResourceObject implements ResourceObjectInterface
     /**
      * @inheritdoc
      */
-    public function isShowMetaInLinkage()
+    public function isShowMetaInRelationships()
     {
-        return $this->isShowMetaInLinkage;
+        return $this->isShowMetaInRlShips;
     }
 
     /**

@@ -16,13 +16,13 @@
  * limitations under the License.
  */
 
-use \Neomerx\JsonApi\Contracts\Schema\LinkObjectInterface;
 use \Neomerx\JsonApi\Contracts\Schema\PaginationLinksInterface;
+use \Neomerx\JsonApi\Contracts\Schema\RelationshipObjectInterface;
 
 /**
  * @package Neomerx\JsonApi
  */
-class LinkObject implements LinkObjectInterface
+class RelationshipObject implements RelationshipObjectInterface
 {
     /**
      * @var string
@@ -52,7 +52,7 @@ class LinkObject implements LinkObjectInterface
     /**
      * @var bool
      */
-    private $isShowLinkage;
+    private $isShowData;
 
     /**
      * @var string|null
@@ -87,7 +87,7 @@ class LinkObject implements LinkObjectInterface
      * @param bool                          $isShowAsRef
      * @param bool                          $isShowSelf
      * @param bool                          $isShowRelated
-     * @param bool                          $isShowLinkage
+     * @param bool                          $isShowData
      * @param bool                          $isShowMeta
      * @param bool                          $isShowPagination
      * @param PaginationLinksInterface|null $pagination
@@ -100,7 +100,7 @@ class LinkObject implements LinkObjectInterface
         $isShowAsRef,
         $isShowSelf,
         $isShowRelated,
-        $isShowLinkage,
+        $isShowData,
         $isShowMeta,
         $isShowPagination,
         $pagination
@@ -115,7 +115,7 @@ class LinkObject implements LinkObjectInterface
             '(is_null($pagination) || $pagination instanceof ' . PaginationLinksInterface::class . ')'
         );
         assert(
-            '$isShowSelf || $isShowRelated || $isShowLinkage || $isShowMeta',
+            '$isShowSelf || $isShowRelated || $isShowData || $isShowMeta',
             'Specification requires at least one of them to be shown'
         );
 
@@ -126,7 +126,7 @@ class LinkObject implements LinkObjectInterface
         $this->isShowAsReference     = $isShowAsRef;
         $this->isShowSelf            = $isShowSelf;
         $this->isShowRelated         = $isShowRelated;
-        $this->isShowLinkage         = $isShowLinkage;
+        $this->isShowData            = $isShowData;
         $this->isShowMeta            = $isShowMeta;
         $this->isShowPagination      = $isShowPagination;
         $this->pagination            = $pagination;
@@ -175,9 +175,9 @@ class LinkObject implements LinkObjectInterface
     /**
      * @inheritdoc
      */
-    public function isShowLinkage()
+    public function isShowData()
     {
-        return $this->isShowLinkage;
+        return $this->isShowData;
     }
 
     /**
@@ -207,7 +207,7 @@ class LinkObject implements LinkObjectInterface
     /**
      * @inheritdoc
      */
-    public function getLinkedData()
+    public function getData()
     {
         return $this->data;
     }

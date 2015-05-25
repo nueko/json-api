@@ -46,7 +46,7 @@ class SchemaFactory implements SchemaFactoryInterface
         $isShowSelfInIncluded,
         $isShowLinksInIncluded,
         $isShowMetaInIncluded,
-        $isShowMetaInLinkage
+        $isShowMetaInRlShips
     ) {
         return new ResourceObject(
             $isInArray,
@@ -60,7 +60,7 @@ class SchemaFactory implements SchemaFactoryInterface
             $isShowSelfInIncluded,
             $isShowLinksInIncluded,
             $isShowMetaInIncluded,
-            $isShowMetaInLinkage
+            $isShowMetaInRlShips
         );
     }
 
@@ -75,12 +75,12 @@ class SchemaFactory implements SchemaFactoryInterface
         $isShowAsRef,
         $isShowSelf,
         $isShowRelated,
-        $isShowLinkage,
+        $isShowData,
         $isShowMeta,
         $isShowPagination,
         $pagination
     ) {
-        return new LinkObject(
+        return new RelationshipObject(
             $name,
             $data,
             $selfSubUrl,
@@ -88,7 +88,7 @@ class SchemaFactory implements SchemaFactoryInterface
             $isShowAsRef,
             $isShowSelf,
             $isShowRelated,
-            $isShowLinkage,
+            $isShowData,
             $isShowMeta,
             $isShowPagination,
             $pagination

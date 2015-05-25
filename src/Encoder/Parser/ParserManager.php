@@ -42,9 +42,12 @@ class ParserManager implements ParserManagerInterface
     /**
      * @inheritdoc
      */
-    public function isShouldParseLinks(ResourceObjectInterface $resource, $isCircular, StackReadOnlyInterface $stack)
-    {
-        list($onTheWay, $parentIsTarget)= $this->foundInPaths($stack);
+    public function isShouldParseRelationships(
+        ResourceObjectInterface $resource,
+        $isCircular,
+        StackReadOnlyInterface $stack
+    ) {
+        list($onTheWay, $parentIsTarget) = $this->foundInPaths($stack);
         $shouldContinue = $onTheWay || ($parentIsTarget && $resource->isShowLinksInIncluded());
         return $shouldContinue;
     }

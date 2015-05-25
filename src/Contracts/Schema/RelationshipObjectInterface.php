@@ -19,7 +19,7 @@
 /**
  * @package Neomerx\JsonApi
  */
-interface LinkObjectInterface
+interface RelationshipObjectInterface
 {
     /**
      * Get link name.
@@ -57,11 +57,11 @@ interface LinkObjectInterface
     public function isShowRelated();
 
     /**
-     * If 'linkage' should be shown.
+     * If 'data' should be shown.
      *
      * @return bool
      */
-    public function isShowLinkage();
+    public function isShowData();
 
     /**
      * Get 'related' URL of link object.
@@ -85,11 +85,11 @@ interface LinkObjectInterface
     public function isShowPagination();
 
     /**
-     * Get linked resource data.
+     * Get resource data from relationship.
      *
      * @return object|array|null
      */
-    public function getLinkedData();
+    public function getData();
 
     /**
      * Get pagination information.

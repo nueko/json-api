@@ -17,10 +17,10 @@
  */
 
 use \Neomerx\JsonApi\Document\Document;
-use \Neomerx\JsonApi\Contracts\Schema\LinkObjectInterface;
 use \Neomerx\JsonApi\Contracts\Schema\ResourceObjectInterface;
 use \Neomerx\JsonApi\Contracts\Schema\PaginationLinksInterface;
 use \Neomerx\JsonApi\Contracts\Document\DocumentLinksInterface;
+use \Neomerx\JsonApi\Contracts\Schema\RelationshipObjectInterface;
 
 /**
  * This is an auxiliary class for Document that help presenting elements.
@@ -30,17 +30,17 @@ use \Neomerx\JsonApi\Contracts\Document\DocumentLinksInterface;
 class ElementPresenter
 {
     /**
-     * @param array                   $target
-     * @param ResourceObjectInterface $parent
-     * @param LinkObjectInterface     $current
-     * @param mixed                   $url
+     * @param array                       $target
+     * @param ResourceObjectInterface     $parent
+     * @param RelationshipObjectInterface $current
+     * @param mixed                       $url
      *
      * @return void
      */
     public function setRelationshipTo(
         array &$target,
         ResourceObjectInterface $parent,
-        LinkObjectInterface $current,
+        RelationshipObjectInterface $current,
         $url
     ) {
         $parentId     = $parent->getId();
@@ -57,17 +57,17 @@ class ElementPresenter
     }
 
     /**
-     * @param array                   $target
-     * @param ResourceObjectInterface $parent
-     * @param LinkObjectInterface     $link
-     * @param ResourceObjectInterface $resource
+     * @param array                       $target
+     * @param ResourceObjectInterface     $parent
+     * @param RelationshipObjectInterface $relationship
+     * @param ResourceObjectInterface     $resource
      *
      * @return void
      */
     public function addRelationshipTo(
         array &$target,
         ResourceObjectInterface $parent,
-        LinkObjectInterface $link,
+        RelationshipObjectInterface $relationship,
         ResourceObjectInterface $resource
     ) {
         $parentId     = $parent->getId();
@@ -76,14 +76,14 @@ class ElementPresenter
 
         // parent might be already added to included to it won't be in 'target' buffer
         if ($parentExists === true) {
-            $name = $link->getName();
-            $alreadyGotLinkages = isset($target[$parentType][$parentId][Document::KEYWORD_RELATIONSHIPS][$name]);
-            if ($alreadyGotLinkages === false) {
+            $name = $relationship->getName();
+            $alreadyGotData = isset($target[$parentType][$parentId][Document::KEYWORD_RELATIONSHIPS][$name]);
+            if ($alreadyGotData === false) {
                 // ... add the first one
                 $target[$parentType][$parentId][Document::KEYWORD_RELATIONSHIPS][$name] =
-                    $this->getLinkRepresentation($parent, $link, $resource);
+                    $this->getLinkRepresentation($parent, $relationship, $resource);
             } else {
-                // ... or add another linkage
+                // ... or add another relation
                 $target[$parentType][$parentId][Document::KEYWORD_RELATIONSHIPS]
                     [$name][Document::KEYWORD_LINKAGE_DATA][] = $this->getLinkageRepresentation($resource);
             }
@@ -188,22 +188,22 @@ class ElementPresenter
             Document::KEYWORD_TYPE => $resource->getType(),
             Document::KEYWORD_ID   => $resource->getId(),
         ];
-        if ($resource->isShowMetaInLinkage() === true) {
+        if ($resource->isShowMetaInRelationships() === true) {
             $representation[Document::KEYWORD_META] = $resource->getMeta();
         }
         return $representation;
     }
 
     /**
-     * @param ResourceObjectInterface $parent
-     * @param LinkObjectInterface     $link
-     * @param ResourceObjectInterface $resource
+     * @param ResourceObjectInterface     $parent
+     * @param RelationshipObjectInterface $link
+     * @param ResourceObjectInterface     $resource
      *
      * @return array
      */
     private function getLinkRepresentation(
         ResourceObjectInterface $parent,
-        LinkObjectInterface $link,
+        RelationshipObjectInterface $link,
         ResourceObjectInterface $resource
     ) {
         assert(
@@ -224,7 +224,7 @@ class ElementPresenter
                 $this->concatUrls($selfUrl, $link->getRelatedSubUrl());
         }
 
-        if ($link->isShowLinkage() === true) {
+        if ($link->isShowData() === true) {
             $representation[Document::KEYWORD_LINKAGE_DATA][] = $this->getLinkageRepresentation($resource);
         }
 
@@ -243,7 +243,7 @@ class ElementPresenter
         }
 
         assert(
-            '$link->isShowSelf() || $link->isShowRelated() || $link->isShowLinkage() || $link->isShowMeta()',
+            '$link->isShowSelf() || $link->isShowRelated() || $link->isShowData() || $link->isShowMeta()',
             'Specification requires at least one of them to be shown'
         );
 

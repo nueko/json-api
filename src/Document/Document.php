@@ -18,10 +18,10 @@
 
 use \Neomerx\JsonApi\Contracts\Document\ErrorInterface;
 use \Neomerx\JsonApi\Contracts\Document\DocumentInterface;
-use \Neomerx\JsonApi\Contracts\Schema\LinkObjectInterface;
 use \Neomerx\JsonApi\Document\Presenters\ElementPresenter;
 use \Neomerx\JsonApi\Contracts\Schema\ResourceObjectInterface;
 use \Neomerx\JsonApi\Contracts\Document\DocumentLinksInterface;
+use \Neomerx\JsonApi\Contracts\Schema\RelationshipObjectInterface;
 
 /**
  * @package Neomerx\JsonApi
@@ -213,10 +213,10 @@ class Document implements DocumentInterface
      */
     public function addRelationshipToData(
         ResourceObjectInterface $parent,
-        LinkObjectInterface $link,
+        RelationshipObjectInterface $relationship,
         ResourceObjectInterface $resource
     ) {
-        $this->presenter->addRelationshipTo($this->bufferForData, $parent, $link, $resource);
+        $this->presenter->addRelationshipTo($this->bufferForData, $parent, $relationship, $resource);
     }
 
     /**
@@ -224,16 +224,16 @@ class Document implements DocumentInterface
      */
     public function addRelationshipToIncluded(
         ResourceObjectInterface $parent,
-        LinkObjectInterface $link,
+        RelationshipObjectInterface $relationship,
         ResourceObjectInterface $resource
     ) {
-        $this->presenter->addRelationshipTo($this->bufferForIncluded, $parent, $link, $resource);
+        $this->presenter->addRelationshipTo($this->bufferForIncluded, $parent, $relationship, $resource);
     }
 
     /**
      * @inheritdoc
      */
-    public function addReferenceToData(ResourceObjectInterface $parent, LinkObjectInterface $current)
+    public function addReferenceToData(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
         $url = $this->presenter->concatUrls($parent->getSelfUrl(), $current->getRelatedSubUrl());
         $this->presenter->setRelationshipTo($this->bufferForData, $parent, $current, $url);
@@ -242,7 +242,7 @@ class Document implements DocumentInterface
     /**
      * @inheritdoc
      */
-    public function addReferenceToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current)
+    public function addReferenceToIncluded(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
         $url = $this->presenter->concatUrls($parent->getSelfUrl(), $current->getRelatedSubUrl());
         $this->presenter->setRelationshipTo($this->bufferForIncluded, $parent, $current, $url);
@@ -251,7 +251,7 @@ class Document implements DocumentInterface
     /**
      * @inheritdoc
      */
-    public function addEmptyRelationshipToData(ResourceObjectInterface $parent, LinkObjectInterface $current)
+    public function addEmptyRelationshipToData(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
         $this->presenter->setRelationshipTo($this->bufferForData, $parent, $current, []);
     }
@@ -259,7 +259,7 @@ class Document implements DocumentInterface
     /**
      * @inheritdoc
      */
-    public function addNullRelationshipToData(ResourceObjectInterface $parent, LinkObjectInterface $current)
+    public function addNullRelationshipToData(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
         $this->presenter->setRelationshipTo($this->bufferForData, $parent, $current, null);
     }
@@ -267,15 +267,17 @@ class Document implements DocumentInterface
     /**
      * @inheritdoc
      */
-    public function addEmptyRelationshipToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current)
-    {
+    public function addEmptyRelationshipToIncluded(
+        ResourceObjectInterface $parent,
+        RelationshipObjectInterface $current
+    ) {
         $this->presenter->setRelationshipTo($this->bufferForIncluded, $parent, $current, []);
     }
 
     /**
      * @inheritdoc
      */
-    public function addNullRelationshipToIncluded(ResourceObjectInterface $parent, LinkObjectInterface $current)
+    public function addNullRelationshipToIncluded(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
         $this->presenter->setRelationshipTo($this->bufferForIncluded, $parent, $current, null);
     }

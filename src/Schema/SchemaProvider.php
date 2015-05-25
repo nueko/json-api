@@ -17,8 +17,8 @@
  */
 
 use \Closure;
-use \Neomerx\JsonApi\Contracts\Schema\SchemaFactoryInterface;
 use \Neomerx\JsonApi\Contracts\Schema\ContainerInterface;
+use \Neomerx\JsonApi\Contracts\Schema\SchemaFactoryInterface;
 use \Neomerx\JsonApi\Contracts\Schema\SchemaProviderInterface;
 
 /**
@@ -41,8 +41,8 @@ abstract class SchemaProvider implements SchemaProviderInterface
     /** If 'related' URL should be shown. Requires 'related' controller to be set. */
     const SHOW_RELATED = 'related';
 
-    /** If data linkage information should be shown. */
-    const SHOW_DATA_LINKAGE = 'showDataLinkage';
+    /** If data should be shown in relationships. */
+    const SHOW_DATA_IN_RELATIONSHIPS = 'showDataInRelationships';
 
     /** If link pagination information should be shown. */
     const SHOW_PAGINATION = 'showPagination';
@@ -91,7 +91,7 @@ abstract class SchemaProvider implements SchemaProviderInterface
     /**
      * @var bool
      */
-    protected $isShowMetaInLinkage = false;
+    protected $isShowMetaInRelationships = false;
 
     /**
      * @var bool
@@ -204,9 +204,9 @@ abstract class SchemaProvider implements SchemaProviderInterface
     /**
      * @inheritdoc
      */
-    public function isShowMetaInLinkage()
+    public function isShowMetaInRelationships()
     {
-        return $this->isShowMetaInLinkage;
+        return $this->isShowMetaInRelationships;
     }
 
     /**
@@ -225,7 +225,7 @@ abstract class SchemaProvider implements SchemaProviderInterface
     /**
      * @inheritdoc
      */
-    public function getLinkObjectIterator($resource)
+    public function getRelationshipObjectIterator($resource)
     {
         foreach ($this->getLinks($resource) as $name => $desc) {
             $data          = $this->readData($desc);
@@ -233,11 +233,11 @@ abstract class SchemaProvider implements SchemaProviderInterface
             $isShowSelf    = ($this->getValue($desc, self::SHOW_SELF, false) === true);
             $isShowAsRef   = ($this->getValue($desc, self::SHOW_AS_REF, false) === true);
             $isShowRelated = ($this->getValue($desc, self::SHOW_RELATED, false) === true);
-            $isShowLinkage = ($this->getValue($desc, self::SHOW_DATA_LINKAGE, true) === true);
+            $isShowLinkage = ($this->getValue($desc, self::SHOW_DATA_IN_RELATIONSHIPS, true) === true);
 
             list($isShowPagination, $pagination) = $this->readPagination($desc);
 
-            $selfSubUrl    = $this->getValue($desc, self::SELF_SUB_URL, '/links/'.$name);
+            $selfSubUrl    = $this->getValue($desc, self::SELF_SUB_URL, '/relationships/'.$name);
             $relatedSubUrl = $this->getValue($desc, self::RELATED_SUB_URL, '/'.$name);
 
             yield $this->factory->createRelationshipObject(
@@ -277,7 +277,7 @@ abstract class SchemaProvider implements SchemaProviderInterface
             $this->isShowSelfInIncluded(),
             $this->isShowLinksInIncluded(),
             $this->isShowMetaInIncluded(),
-            $this->isShowMetaInLinkage()
+            $this->isShowMetaInRelationships()
         );
     }
 

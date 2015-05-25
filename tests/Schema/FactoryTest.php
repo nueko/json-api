@@ -67,7 +67,7 @@ class FactoryTest extends BaseTestCase
             $isShowSelfInIncluded = true,
             $isShowLinksInIncluded = true,
             $isShowMetaInIncluded = true,
-            $isShowMetaInLinkage = true
+            $isShowMetaInRelShips = true
         ));
 
         $this->assertEquals($isInArray, $resource->isInArray());
@@ -81,7 +81,7 @@ class FactoryTest extends BaseTestCase
         $this->assertEquals($isShowSelfInIncluded, $resource->isShowSelfInIncluded());
         $this->assertEquals($isShowLinksInIncluded, $resource->isShowLinksInIncluded());
         $this->assertEquals($isShowMetaInIncluded, $resource->isShowMetaInIncluded());
-        $this->assertEquals($isShowMetaInLinkage, $resource->isShowMetaInLinkage());
+        $this->assertEquals($isShowMetaInRelShips, $resource->isShowMetaInRelationships());
     }
 
     /**
@@ -97,20 +97,20 @@ class FactoryTest extends BaseTestCase
             $isShowAsRef = false,
             $isShowSelf = true,
             $isShowRelated = true,
-            $isShowLinkage = true,
+            $isShowData = true,
             $isShowMeta = true,
             $isShowPagination = true,
             $pagination = Mockery::mock(PaginationLinksInterface::class)
         ));
 
         $this->assertEquals($name, $link->getName());
-        $this->assertEquals($data, $link->getLinkedData());
+        $this->assertEquals($data, $link->getData());
         $this->assertEquals($selfSubUrl, $link->getSelfSubUrl());
         $this->assertEquals($relatedSubUrl, $link->getRelatedSubUrl());
         $this->assertEquals($isShowAsRef, $link->isShowAsReference());
         $this->assertEquals($isShowSelf, $link->isShowSelf());
         $this->assertEquals($isShowRelated, $link->isShowRelated());
-        $this->assertEquals($isShowLinkage, $link->isShowLinkage());
+        $this->assertEquals($isShowData, $link->isShowData());
         $this->assertEquals($isShowMeta, $link->isShowMeta());
         $this->assertEquals($isShowPagination, $link->isShowPagination());
         $this->assertSame($pagination, $link->getPagination());

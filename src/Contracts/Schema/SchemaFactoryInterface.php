@@ -44,7 +44,7 @@ interface SchemaFactoryInterface
      * @param bool   $isShowSelfInIncluded
      * @param bool   $isShowLinksInIncluded
      * @param bool   $isShowMetaInIncluded
-     * @param bool   $isShowMetaInLinkage
+     * @param bool   $isShowMetaInRlShips
      *
      * @return ResourceObjectInterface
      */
@@ -60,7 +60,7 @@ interface SchemaFactoryInterface
         $isShowSelfInIncluded,
         $isShowLinksInIncluded,
         $isShowMetaInIncluded,
-        $isShowMetaInLinkage
+        $isShowMetaInRlShips
     );
 
     /**
@@ -73,12 +73,12 @@ interface SchemaFactoryInterface
      * @param bool                          $isShowAsRef
      * @param bool                          $isShowSelf
      * @param bool                          $isShowRelated
-     * @param bool                          $isShowLinkage
+     * @param bool                          $isShowData
      * @param bool                          $isShowMeta
      * @param bool                          $isShowPagination
      * @param PaginationLinksInterface|null $pagination
      *
-     * @return LinkObjectInterface
+     * @return RelationshipObjectInterface
      */
     public function createRelationshipObject(
         $name,
@@ -88,7 +88,7 @@ interface SchemaFactoryInterface
         $isShowAsRef,
         $isShowSelf,
         $isShowRelated,
-        $isShowLinkage,
+        $isShowData,
         $isShowMeta,
         $isShowPagination,
         $pagination

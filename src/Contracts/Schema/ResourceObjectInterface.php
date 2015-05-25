@@ -85,11 +85,11 @@ interface ResourceObjectInterface
     public function isShowMetaInIncluded();
 
     /**
-     * If 'meta' should be shown in linkages.
+     * If 'meta' should be shown in relationships.
      *
      * @return bool
      */
-    public function isShowMetaInLinkage();
+    public function isShowMetaInRelationships();
 
     /**
      * If resources links should be shown for included resources.
