@@ -326,6 +326,61 @@ EOL;
         $this->assertEquals($expected, $actual);
     }
 
+    public function testEncodeLinksInDocumentAndRelationships()
+    {
+        $actual = Encoder::instance([
+            Author::class  => AuthorSchema::class,
+            Comment::class => CommentSchema::class,
+            Post::class    => function ($factory, $container) {
+                $schema = new PostSchema($factory, $container);
+                $schema->linkAddTo(Post::LINK_AUTHOR, PostSchema::SHOW_SELF, true);
+                $schema->linkAddTo(Post::LINK_AUTHOR, PostSchema::SHOW_RELATED, true);
+                $schema->linkAddTo(Post::LINK_COMMENTS, PostSchema::SHOW_SELF, true);
+                $schema->linkAddTo(Post::LINK_COMMENTS, PostSchema::SHOW_RELATED, true);
+                return $schema;
+            },
+        ])->encode($this->getStandardPost());
+
+        $expected = <<<EOL
+        {
+            "data" : {
+                "type" : "posts",
+                "id"   : "1",
+                "attributes" : {
+                    "title" : "JSON API paints my bikeshed!",
+                    "body"  : "Outside every fat man there was an even fatter man trying to close in"
+                },
+                "relationships" : {
+                    "author" : {
+                        "links" : {
+                            "self"    : "http://example.com/posts/1/relationships/author",
+                            "related" : "http://example.com/posts/1/author"
+                        },
+                        "data" : { "type" : "people", "id" : "9" }
+                    },
+                    "comments" : {
+                        "links" : {
+                            "self"    : "http://example.com/posts/1/relationships/comments",
+                            "related" : "http://example.com/posts/1/comments"
+                        },
+                        "data":[
+                            { "type" : "comments", "id" : "5" },
+                            { "type" : "comments", "id" : "12" }
+                        ]
+                    }
+                },
+                "links" : {
+                    "self" : "http://example.com/posts/1"
+                }
+            }
+        }
+EOL;
+        // remove formatting from 'expected'
+        $expected = json_encode(json_decode($expected));
+
+        $this->assertEquals($expected, $actual);
+    }
+
     /**
      * @return Post
      */
