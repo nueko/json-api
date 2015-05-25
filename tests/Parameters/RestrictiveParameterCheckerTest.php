@@ -54,7 +54,7 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
     private $requestParams = [
         'fields'  => ['type1' => 'fields1,fields2'],
         'include' => 'author,comments,comments.author',
-        'sort'    => '-created,+title,name',
+        'sort'    => '-created,+title,name.with.dots',
         'filter'  => ['some' => 'filter'],
         'page'    => ['size' => 10, 'offset' => 4],
     ];
@@ -244,7 +244,7 @@ class RestrictiveParameterCheckerTest extends BaseTestCase
      */
     public function testAllowedSearchParams()
     {
-        $allowedSortParams = ['created', 'title', 'name', 'and-others'];
+        $allowedSortParams = ['created', 'title', 'name.with.dots', 'and-others'];
         $checker = new RestrictiveParameterChecker(
             $this->prepareExceptions(),
             $this->prepareCodecMatcher(
