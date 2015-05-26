@@ -41,7 +41,7 @@ The package covers all the complexity of parsing and checking HTTP request param
 Via Composer
 
 ```
-$ composer require neomerx/json-api ~0.3
+$ composer require neomerx/json-api ~0.4
 ```
 
 ## Usage
@@ -444,7 +444,7 @@ $encoder = Encoder::instance([
 
 ## Your API
 
-Are you planning to add JSON API and need help? We'd love to talk to you [sales@neomerx.com](mailto:sales@neomerx.com).
+Are you planning to add JSON API and need help? We'd love to talk to you [sales@neomerx.com](sales@neomerx.com).
 
 ## Contributing
 
