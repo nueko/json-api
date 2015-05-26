@@ -72,7 +72,11 @@ class EncodingParameters implements EncodingParametersInterface
      */
     public function isPathIncluded($path)
     {
-        return $this->pathIndexes === null || isset($this->pathIndexes[$path]) === true;
+        return
+            $this->pathIndexes === null ||
+            isset($this->pathIndexes[$path]) === true ||
+            // RC4 spec changed requirements and intermediate paths should be included as well
+            $this->hasMatchWithIncludedPaths($path) === true;
     }
 
     /**

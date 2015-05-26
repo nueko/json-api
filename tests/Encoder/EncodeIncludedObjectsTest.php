@@ -158,7 +158,7 @@ EOL;
             Post::class    => PostSchema::class,
             Site::class    => SiteSchema::class,
         ])->encode($this->site, null, null, new EncodingParameters(
-            // include only this relation
+            // include only this relation (according to the spec intermediate will be included as well)
             [Site::LINK_POSTS . '.' . Post::LINK_COMMENTS],
             // include only these attributes and links
             [
@@ -212,6 +212,9 @@ EOL;
                 "links" : {
                     "self"   : "http://example.com/comments/12"
                 }
+            }, {
+                "type" : "posts",
+                    "id":"1"
             }]
         }
 EOL;
