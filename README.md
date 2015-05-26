@@ -444,7 +444,7 @@ $encoder = Encoder::instance([
 
 ## Your API
 
-Are you planning to add JSON API and need help? We'd love to talk to you [sales@neomerx.com](sales@neomerx.com).
+Are you planning to add JSON API and need help? We'd love to talk to you [sales@neomerx.com](mailto:sales@neomerx.com).
 
 ## Contributing
 
