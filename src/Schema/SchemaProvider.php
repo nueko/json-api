@@ -17,6 +17,7 @@
  */
 
 use \Closure;
+use \Neomerx\JsonApi\Contracts\Schema\LinkInterface;
 use \Neomerx\JsonApi\Contracts\Schema\ContainerInterface;
 use \Neomerx\JsonApi\Contracts\Schema\SchemaFactoryInterface;
 use \Neomerx\JsonApi\Contracts\Schema\SchemaProviderInterface;
@@ -237,14 +238,14 @@ abstract class SchemaProvider implements SchemaProviderInterface
 
             list($isShowPagination, $pagination) = $this->readPagination($desc);
 
-            $selfSubUrl    = $this->getValue($desc, self::SELF_SUB_URL, '/relationships/'.$name);
-            $relatedSubUrl = $this->getValue($desc, self::RELATED_SUB_URL, '/'.$name);
+            $selfLink    = $this->getSelfLink($name, $desc, $data);
+            $relatedLink = $this->getRelatedLink($name, $desc, $data);
 
             yield $this->factory->createRelationshipObject(
                 $name,
                 $data,
-                $selfSubUrl,
-                $relatedSubUrl,
+                $selfLink,
+                $relatedLink,
                 $isShowAsRef,
                 $isShowSelf,
                 $isShowRelated,
@@ -303,6 +304,40 @@ abstract class SchemaProvider implements SchemaProviderInterface
         substr($this->baseSelfUrl, -1) === '/' ?: $this->baseSelfUrl .= '/';
 
         return $this->baseSelfUrl;
+    }
+
+    /**
+     * Get link for 'self' relationship url.
+     *
+     * @param string            $relationshipName
+     * @param array             $description
+     * @param mixed             $relationshipData
+     * @param null|array|object $meta
+     *
+     * @return LinkInterface
+     */
+    protected function getSelfLink($relationshipName, array $description, $relationshipData, $meta = null)
+    {
+        $relationshipData ?: null;
+        $subHref = $this->getValue($description, self::SELF_SUB_URL, '/relationships/'.$relationshipName);
+        return $this->factory->createLink($subHref, $meta);
+    }
+
+    /**
+     * Get link for 'self' relationship url.
+     *
+     * @param string            $relationshipName
+     * @param array             $description
+     * @param mixed             $relationshipData
+     * @param null|array|object $meta
+     *
+     * @return LinkInterface
+     */
+    protected function getRelatedLink($relationshipName, array $description, $relationshipData, $meta = null)
+    {
+        $relationshipData ?: null;
+        $href = $this->getValue($description, self::RELATED_SUB_URL, '/'.$relationshipName);
+        return $this->factory->createLink($href, $meta);
     }
 
     /**

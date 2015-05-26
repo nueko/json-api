@@ -31,6 +31,8 @@ class Document implements DocumentInterface
     /** Reserved keyword */
     const KEYWORD_LINKS         = 'links';
     /** Reserved keyword */
+    const KEYWORD_HREF          = 'href';
+    /** Reserved keyword */
     const KEYWORD_RELATIONSHIPS = 'relationships';
     /** Reserved keyword */
     const KEYWORD_SELF          = 'self';
@@ -235,7 +237,7 @@ class Document implements DocumentInterface
      */
     public function addReferenceToData(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
-        $url = $this->presenter->concatUrls($parent->getSelfUrl(), $current->getRelatedSubUrl());
+        $url = $this->presenter->concatUrls($parent->getSelfUrl(), $current->getRelatedLink());
         $this->presenter->setRelationshipTo($this->bufferForData, $parent, $current, $url);
     }
 
@@ -244,7 +246,7 @@ class Document implements DocumentInterface
      */
     public function addReferenceToIncluded(ResourceObjectInterface $parent, RelationshipObjectInterface $current)
     {
-        $url = $this->presenter->concatUrls($parent->getSelfUrl(), $current->getRelatedSubUrl());
+        $url = $this->presenter->concatUrls($parent->getSelfUrl(), $current->getRelatedLink());
         $this->presenter->setRelationshipTo($this->bufferForIncluded, $parent, $current, $url);
     }
 

@@ -17,6 +17,7 @@
  */
 
 use \Neomerx\JsonApi\Document\Document;
+use \Neomerx\JsonApi\Contracts\Schema\LinkInterface;
 use \Neomerx\JsonApi\Contracts\Schema\ResourceObjectInterface;
 use \Neomerx\JsonApi\Contracts\Schema\PaginationLinksInterface;
 use \Neomerx\JsonApi\Contracts\Document\DocumentLinksInterface;
@@ -159,21 +160,32 @@ class ElementPresenter
     }
 
     /**
-     * @param string $url
-     * @param string $subUrl
+     * @param string        $url
+     * @param LinkInterface $subLink
      *
-     * @return string
+     * @return string|array
      */
-    public function concatUrls($url, $subUrl)
+    public function concatUrls($url, LinkInterface $subLink)
     {
+        $subUrl = $subLink->getSubHref();
+
         $urlEndsWithSlash   = (substr($url, -1) === '/');
         $subStartsWithSlash = (substr($subUrl, 0, 1) === '/');
         if ($urlEndsWithSlash === false && $subStartsWithSlash === false) {
-            return $url . '/' . $subUrl;
+            $resultUrl = $url . '/' . $subUrl;
         } elseif (($urlEndsWithSlash xor $subStartsWithSlash) === true) {
-            return $url . $subUrl;
+            $resultUrl = $url . $subUrl;
         } else {
-            return rtrim($url, '/') . $subUrl;
+            $resultUrl = rtrim($url, '/') . $subUrl;
+        }
+
+        if ($subLink->getMeta() === null) {
+            return $resultUrl;
+        } else {
+            return [
+                Document::KEYWORD_HREF => $resultUrl,
+                Document::KEYWORD_META => $subLink->getMeta(),
+            ];
         }
     }
 
@@ -216,12 +228,12 @@ class ElementPresenter
         $representation = [];
         if ($link->isShowSelf() === true) {
             $representation[Document::KEYWORD_LINKS][Document::KEYWORD_SELF] =
-                $this->concatUrls($selfUrl, $link->getSelfSubUrl());
+                $this->concatUrls($selfUrl, $link->getSelfLink());
         }
 
         if ($link->isShowRelated() === true) {
             $representation[Document::KEYWORD_LINKS][Document::KEYWORD_RELATED] =
-                $this->concatUrls($selfUrl, $link->getRelatedSubUrl());
+                $this->concatUrls($selfUrl, $link->getRelatedLink());
         }
 
         if ($link->isShowData() === true) {

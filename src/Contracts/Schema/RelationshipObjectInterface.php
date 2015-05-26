@@ -38,9 +38,9 @@ interface RelationshipObjectInterface
     /**
      * Get 'self' URL of link object.
      *
-     * @return string
+     * @return LinkInterface
      */
-    public function getSelfSubUrl();
+    public function getSelfLink();
 
     /**
      * If link should be shown as URL reference ('related').
@@ -66,9 +66,9 @@ interface RelationshipObjectInterface
     /**
      * Get 'related' URL of link object.
      *
-     * @return string
+     * @return LinkInterface
      */
-    public function getRelatedSubUrl();
+    public function getRelatedLink();
 
     /**
      * If 'meta' should be shown.

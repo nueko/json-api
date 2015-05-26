@@ -20,6 +20,7 @@ use \stdClass;
 use \Neomerx\Tests\JsonApi\BaseTestCase;
 use \Neomerx\JsonApi\Schema\SchemaFactory;
 use \Neomerx\JsonApi\Document\DocumentFactory;
+use \Neomerx\JsonApi\Contracts\Schema\LinkInterface;
 use \Neomerx\JsonApi\Contracts\Document\DocumentInterface;
 use \Neomerx\JsonApi\Document\Presenters\ElementPresenter;
 use \Neomerx\JsonApi\Contracts\Schema\SchemaFactoryInterface;
@@ -260,8 +261,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             true,
             true,
@@ -335,8 +336,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            '/selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('/selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             false,
             false,
@@ -404,8 +405,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            '/selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('/selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             false,
             false,
@@ -477,8 +478,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             false,
             false,
@@ -546,8 +547,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             true,
             true,
             true,
@@ -599,8 +600,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             false,
             false,
@@ -652,8 +653,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             false,
             false,
@@ -803,8 +804,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             true,
             true,
@@ -884,8 +885,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'comments-relationship',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             false,
             false,
@@ -946,8 +947,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'link-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             true,
             true,
@@ -1006,8 +1007,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'link-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             false,
             true,
             true,
@@ -1066,8 +1067,8 @@ EOL;
         $link = $this->schemaFactory->createRelationshipObject(
             'relationship-name',
             new stdClass(), // in reality it will be a Comment class instance where $resource properties were taken from
-            'selfSubUrl',
-            'relatedSubUrl',
+            $this->createLink('selfSubUrl'),
+            $this->createLink('relatedSubUrl'),
             true,
             true,
             true,
@@ -1181,10 +1182,10 @@ EOL;
     {
         $presenter = new ElementPresenter();
 
-        $this->assertEquals('url/subUrl', $presenter->concatUrls('url', 'subUrl'));
-        $this->assertEquals('url/subUrl', $presenter->concatUrls('url/', 'subUrl'));
-        $this->assertEquals('url/subUrl', $presenter->concatUrls('url', '/subUrl'));
-        $this->assertEquals('url/subUrl', $presenter->concatUrls('url/', '/subUrl'));
+        $this->assertEquals('url/subUrl', $presenter->concatUrls('url', $this->createLink('subUrl')));
+        $this->assertEquals('url/subUrl', $presenter->concatUrls('url/', $this->createLink('subUrl')));
+        $this->assertEquals('url/subUrl', $presenter->concatUrls('url', $this->createLink('/subUrl')));
+        $this->assertEquals('url/subUrl', $presenter->concatUrls('url/', $this->createLink('/subUrl')));
     }
 
     /**
@@ -1220,6 +1221,16 @@ EOL;
         }
 EOL;
         $this->check($expected);
+    }
+
+    /**
+     * @param string $subHref
+     *
+     * @return LinkInterface
+     */
+    private function createLink($subHref)
+    {
+        return $this->schemaFactory->createLink($subHref);
     }
 
     /**

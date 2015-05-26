@@ -92,8 +92,8 @@ class FactoryTest extends BaseTestCase
         $this->assertNotNull($link = $this->factory->createRelationshipObject(
             $name = 'link-name',
             $data = new stdClass(),
-            $selfSubUrl = 'selfSubUrl',
-            $relatedSubUrl = 'relatedSubUrl',
+            $selfSubUrl = $this->factory->createLink('selfSubUrl'),
+            $relatedSubUrl = $this->factory->createLink('relatedSubUrl'),
             $isShowAsRef = false,
             $isShowSelf = true,
             $isShowRelated = true,
@@ -105,8 +105,8 @@ class FactoryTest extends BaseTestCase
 
         $this->assertEquals($name, $link->getName());
         $this->assertEquals($data, $link->getData());
-        $this->assertEquals($selfSubUrl, $link->getSelfSubUrl());
-        $this->assertEquals($relatedSubUrl, $link->getRelatedSubUrl());
+        $this->assertEquals($selfSubUrl, $link->getSelfLink());
+        $this->assertEquals($relatedSubUrl, $link->getRelatedLink());
         $this->assertEquals($isShowAsRef, $link->isShowAsReference());
         $this->assertEquals($isShowSelf, $link->isShowSelf());
         $this->assertEquals($isShowRelated, $link->isShowRelated());

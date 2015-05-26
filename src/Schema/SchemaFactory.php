@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use \Neomerx\JsonApi\Contracts\Schema\LinkInterface;
 use \Neomerx\JsonApi\Contracts\Schema\SchemaFactoryInterface;
 
 /**
@@ -70,8 +71,8 @@ class SchemaFactory implements SchemaFactoryInterface
     public function createRelationshipObject(
         $name,
         $data,
-        $selfSubUrl,
-        $relatedSubUrl,
+        LinkInterface $selfLink,
+        LinkInterface $relatedLink,
         $isShowAsRef,
         $isShowSelf,
         $isShowRelated,
@@ -83,8 +84,8 @@ class SchemaFactory implements SchemaFactoryInterface
         return new RelationshipObject(
             $name,
             $data,
-            $selfSubUrl,
-            $relatedSubUrl,
+            $selfLink,
+            $relatedLink,
             $isShowAsRef,
             $isShowSelf,
             $isShowRelated,
@@ -101,5 +102,13 @@ class SchemaFactory implements SchemaFactoryInterface
     public function createPaginationLinks($firstUrl = null, $lastUrl = null, $prevUrl = null, $nextUrl = null)
     {
         return new PaginationLinks($firstUrl, $lastUrl, $prevUrl, $nextUrl);
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function createLink($subHref, $meta = null)
+    {
+        return new Link($subHref, $meta);
     }
 }

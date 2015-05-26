@@ -16,6 +16,7 @@
  * limitations under the License.
  */
 
+use \Neomerx\JsonApi\Contracts\Schema\LinkInterface;
 use \Neomerx\JsonApi\Contracts\Schema\PaginationLinksInterface;
 use \Neomerx\JsonApi\Contracts\Schema\RelationshipObjectInterface;
 
@@ -55,14 +56,14 @@ class RelationshipObject implements RelationshipObjectInterface
     private $isShowData;
 
     /**
-     * @var string|null
+     * @var LinkInterface
      */
-    private $selfSubUrl;
+    private $selfLink;
 
     /**
-     * @var string|null
+     * @var LinkInterface
      */
-    private $relatedSubUrl;
+    private $relatedLink;
 
     /**
      * @var bool
@@ -82,8 +83,8 @@ class RelationshipObject implements RelationshipObjectInterface
     /**
      * @param string                        $name
      * @param object|array|null             $data
-     * @param string|null                   $selfSubUrl
-     * @param string|null                   $relatedSubUrl
+     * @param LinkInterface                 $selfLink
+     * @param LinkInterface                 $relatedLink
      * @param bool                          $isShowAsRef
      * @param bool                          $isShowSelf
      * @param bool                          $isShowRelated
@@ -95,8 +96,8 @@ class RelationshipObject implements RelationshipObjectInterface
     public function __construct(
         $name,
         $data,
-        $selfSubUrl,
-        $relatedSubUrl,
+        LinkInterface $selfLink,
+        LinkInterface $relatedLink,
         $isShowAsRef,
         $isShowSelf,
         $isShowRelated,
@@ -108,8 +109,6 @@ class RelationshipObject implements RelationshipObjectInterface
         assert(
             'is_string($name) &&'.
             '(is_object($data) || is_array($data) || is_null($data)) &&'.
-            '(is_null($selfSubUrl) || is_string($selfSubUrl)) &&'.
-            '(is_null($relatedSubUrl) || is_string($relatedSubUrl)) &&'.
             'is_bool($isShowAsRef) && is_bool($isShowSelf) && is_bool($isShowRelated) && is_bool($isShowMeta) &&'.
             'is_bool($isShowPagination) &&'.
             '(is_null($pagination) || $pagination instanceof ' . PaginationLinksInterface::class . ')'
@@ -119,17 +118,17 @@ class RelationshipObject implements RelationshipObjectInterface
             'Specification requires at least one of them to be shown'
         );
 
-        $this->name                  = $name;
-        $this->data                  = $data;
-        $this->selfSubUrl            = $selfSubUrl;
-        $this->relatedSubUrl         = $relatedSubUrl;
-        $this->isShowAsReference     = $isShowAsRef;
-        $this->isShowSelf            = $isShowSelf;
-        $this->isShowRelated         = $isShowRelated;
-        $this->isShowData            = $isShowData;
-        $this->isShowMeta            = $isShowMeta;
-        $this->isShowPagination      = $isShowPagination;
-        $this->pagination            = $pagination;
+        $this->name              = $name;
+        $this->data              = $data;
+        $this->selfLink          = $selfLink;
+        $this->relatedLink       = $relatedLink;
+        $this->isShowAsReference = $isShowAsRef;
+        $this->isShowSelf        = $isShowSelf;
+        $this->isShowRelated     = $isShowRelated;
+        $this->isShowData        = $isShowData;
+        $this->isShowMeta        = $isShowMeta;
+        $this->isShowPagination  = $isShowPagination;
+        $this->pagination        = $pagination;
     }
 
     /**
@@ -151,9 +150,9 @@ class RelationshipObject implements RelationshipObjectInterface
     /**
      * @inheritdoc
      */
-    public function getSelfSubUrl()
+    public function getSelfLink()
     {
-        return $this->selfSubUrl;
+        return $this->selfLink;
     }
 
     /**
@@ -183,9 +182,9 @@ class RelationshipObject implements RelationshipObjectInterface
     /**
      * @inheritdoc
      */
-    public function getRelatedSubUrl()
+    public function getRelatedLink()
     {
-        return $this->relatedSubUrl;
+        return $this->relatedLink;
     }
 
     /**

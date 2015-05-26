@@ -326,6 +326,9 @@ EOL;
         $this->assertEquals($expected, $actual);
     }
 
+    /**
+     * Test encode with 'self' and 'related' URLs in main document and relationships.
+     */
     public function testEncodeLinksInDocumentAndRelationships()
     {
         $actual = Encoder::instance([
@@ -371,6 +374,61 @@ EOL;
                 },
                 "links" : {
                     "self" : "http://example.com/posts/1"
+                }
+            }
+        }
+EOL;
+        // remove formatting from 'expected'
+        $expected = json_encode(json_decode($expected));
+
+        $this->assertEquals($expected, $actual);
+    }
+
+    /**
+     * Test encode with 'self' and 'related' URLs in main document and relationships.
+     */
+    public function testEncodeLinkWithMeta()
+    {
+        $comments = [
+            Comment::instance(5, 'First!'),
+            Comment::instance(12, 'I like XML better'),
+        ];
+        $author   = Author::instance(9, 'Dan', 'Gebhardt', $comments);
+        $actual = Encoder::instance([
+            Author::class  => function ($factory, $container) {
+                $schema = new AuthorSchema($factory, $container);
+                $schema->linkAddTo(Post::LINK_COMMENTS, PostSchema::SHOW_SELF, true);
+                $schema->setRelationshipMeta(['some' => 'meta']);
+                return $schema;
+            },
+            Comment::class => CommentSchema::class,
+        ])->encode($author);
+
+        $expected = <<<EOL
+        {
+            "data":{
+                "type" : "people",
+                "id"   : "9",
+                "attributes" : {
+                    "first_name" : "Dan",
+                    "last_name"  : "Gebhardt"
+                },
+                "relationships" : {
+                    "comments"  : {
+                        "links" : {
+                            "self" : {
+                                "href" : "http://example.com/people/9/relationships/comments",
+                                "meta" : { "some":"meta" }
+                            }
+                        },
+                        "data":[
+                            { "type":"comments", "id":"5" },
+                            { "type":"comments", "id":"12" }
+                        ]
+                    }
+                },
+                "links":{
+                    "self":"http://example.com/people/9"
                 }
             }
         }

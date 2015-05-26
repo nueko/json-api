@@ -68,8 +68,8 @@ interface SchemaFactoryInterface
      *
      * @param string                        $name
      * @param object|array|null             $data
-     * @param string|null                   $selfSubUrl
-     * @param string|null                   $relatedSubUrl
+     * @param LinkInterface                 $selfLink
+     * @param LinkInterface                 $relatedLink
      * @param bool                          $isShowAsRef
      * @param bool                          $isShowSelf
      * @param bool                          $isShowRelated
@@ -83,8 +83,8 @@ interface SchemaFactoryInterface
     public function createRelationshipObject(
         $name,
         $data,
-        $selfSubUrl,
-        $relatedSubUrl,
+        LinkInterface $selfLink,
+        LinkInterface $relatedLink,
         $isShowAsRef,
         $isShowSelf,
         $isShowRelated,
@@ -105,4 +105,14 @@ interface SchemaFactoryInterface
      * @return PaginationLinksInterface
      */
     public function createPaginationLinks($firstUrl = null, $lastUrl = null, $prevUrl = null, $nextUrl = null);
+
+    /**
+     * Create link.
+     *
+     * @param string            $subHref
+     * @param array|object|null $meta
+     *
+     * @return LinkInterface
+     */
+    public function createLink($subHref, $meta = null);
 }
