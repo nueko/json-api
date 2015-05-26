@@ -6,9 +6,11 @@
 
 ## Description
 
+<img src="http://jsonapi.org/images/jsonapi.png" alt="JSON API logo" title="JSON API" align="right" width="415" height="130" />
+
 A good API is one of most effective ways to improve the experience for your clients. Standardized approaches for data formats and communication protocols increase productivity and make integration between applications smooth.
 
-This framework agnostic package fully implements [JSON API](http://jsonapi.org/) specification and helps focusing on core application functionality rather than on protocol implementation. It supports document structure, errors and data fetching as described in [JSON API Format](http://jsonapi.org/format/). As it is designed to stay framework agnostic for practical usage it requires framework integration. If you are looking for quick start application consider one of the following
+This framework agnostic package implements [JSON API](http://jsonapi.org/) specification version RC4 (which is planned to be released on May 28, 2015 as v1.0) and helps focusing on core application functionality rather than on protocol implementation. It supports document structure, errors and data fetching as described in [JSON API Format](http://jsonapi.org/format/). As it is designed to stay framework agnostic for practical usage it requires framework integration. If you are looking for quick start application consider one of the following
 - [Limoncello Collins](https://github.com/neomerx/limoncello-collins) is a pre-configured Laravel-based quick start application.
 - [Limoncello Shot](https://github.com/neomerx/limoncello-shot) is a pre-configured Lumen-based quick start application.
 
@@ -21,26 +23,18 @@ Encoding fully support specification. In particular
 * Circular resource references
 * Meta information for document, resources and link objects
 * Link objects (including links as references, links to null and empty arrays)
-* Limits for input data parsing depth
 * Sparse fieldset filter rules
 * Pagination links
 * Errors
 
 The package covers all the complexity of parsing and checking HTTP request parameters and headers. For instance it helps to correctly respond with ```Unsupported Media Type``` (HTTP code 415) and ```Not Acceptable``` (HTTP code 406) to invalid requests. You don't need to manually validate all input parameters on every request. You can configure what parameters are supported by your services and this package will check incoming requests automatically. It greatly simplifies API development. All parameters from the specification are supported
 
+* Parsing HTTP ```Accept``` and ```Content-Type``` headers in accordance with RFC 2616
 * Inclusion of related resources
 * Sparse fields
 * Sorting
 * Pagination
 * Filtering
-
-## Contributing
-
-JSON API specification v1.0 is planned to be released on May 28, 2015. During the May 2015 JSON API team has been committing changes at more than 10x usual rate. For those changes a development branch ```dev``` is created. Development of those changes will be completed in early June. Current development tasks are in [issues](https://github.com/neomerx/json-api/issues). 
-
-If you have spotted any specification changes that are not reflected in this package please post an [issue](https://github.com/neomerx/json-api/issues).
-
-Thank you for your support :star:.
 
 ## Install
 
@@ -131,14 +125,13 @@ will output
         "attributes": {
             "name": "JSON API Samples"
         },
-        "links": {
-            "self": "http:\/\/example.com\/sites\/1",
+        "relationships": {
             "posts": {
-                "linkage": {
-                    "type": "posts",
-                    "id": "321"
-                }
+                "data": { "type": "posts", "id": "321" }
             }
+        },
+        "links": {
+            "self": "http:\/\/example.com\/sites\/1"
         }
     },
     "included": [
@@ -156,14 +149,13 @@ will output
             "attributes": {
                 "body": "Included objects work as easy as basic ones"
             },
-            "links": {
-                "self": "http:\/\/example.com\/comments\/456",
+            "relationships": {
                 "author": {
-                    "linkage": {
-                        "type": "people",
-                        "id": "123"
-                    }
+                    "data": { "type": "people", "id": "123" }
                 }
+            },
+            "links": {
+                "self": "http:\/\/example.com\/comments\/456"
             }
         },
         {
@@ -172,14 +164,13 @@ will output
             "attributes": {
                 "body": "Let's try!"
             },
-            "links": {
-                "self": "http:\/\/example.com\/comments\/789",
+            "relationships": {
                 "author": {
-                    "linkage": {
-                        "type": "people",
-                        "id": "123"
-                    }
+                    "data": { "type": "people", "id": "123" }
                 }
+            },
+            "links": {
+                "self": "http:\/\/example.com\/comments\/789"
             }
         },
         {
@@ -189,23 +180,14 @@ will output
                 "title": "Included objects",
                 "body": "Yes, it is supported"
             },
-            "links": {
+            "relationships": {
                 "author": {
-                    "linkage": {
-                        "type": "people",
-                        "id": "123"
-                    }
+                    "data": { "type": "people", "id": "123" }
                 },
                 "comments": {
-                    "linkage": [
-                        {
-                            "type": "comments",
-                            "id": "456"
-                        },
-                        {
-                            "type": "comments",
-                            "id": "789"
-                        }
+                    "data": [
+                        { "type": "comments", "id": "456" },
+                        { "type": "comments", "id": "789" }
                     ]
                 }
             }
@@ -237,7 +219,7 @@ $encoder  = Encoder::instance([
 echo $encoder->encode($site, null, null, $options) . PHP_EOL;
 ```
 
-Note that output does not contain objects from neither ```posts``` nor ```posts.comments``` relations. Attributes of ```site``` and ```author``` are filtered as well.
+Note that ```sites```, ```posts``` and ```people``` attributes are filtered.
 
 ```json
 {
@@ -258,6 +240,10 @@ Note that output does not contain objects from neither ```posts``` nor ```posts.
             "attributes": {
                 "first_name": "John"
             }
+        },
+        {
+            "type": "posts",
+            "id": "321"
         }
     ]
 }
@@ -456,9 +442,15 @@ $encoder = Encoder::instance([
 ]);
 ```
 
-## Questions?
+## Your API
 
-Do not hesitate to contact us on [![Gitter](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/neomerx/json-api) or post an [issue](https://github.com/neomerx/json-api/issues).
+Are you planning to add JSON API and need help? We'd love to talk to you [sales@neomerx.com](mailto:sales@neomerx.com).
+
+## Contributing
+
+If you have spotted any specification changes that are not reflected in this package please post an [issue](https://github.com/neomerx/json-api/issues). Pull requests for improving documentation and code are welcome.
+
+Thank you for your support :star:.
 
 ## Testing
 
