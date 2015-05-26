@@ -39,6 +39,11 @@ class EncodingParameters implements EncodingParametersInterface
     private $fieldSets;
 
     /**
+     * @var array|null
+     */
+    private $matchCache;
+
+    /**
      * @param string[]|null $includePaths
      * @param array|null    $fieldSets
      */
@@ -50,6 +55,7 @@ class EncodingParameters implements EncodingParametersInterface
         if ($this->includePaths !== null) {
             assert('is_array($this->includePaths)');
             $this->pathIndexes = array_flip(array_values($this->includePaths));
+            $this->matchCache  = [];
         }
     }
 
@@ -88,5 +94,29 @@ class EncodingParameters implements EncodingParametersInterface
         } else {
             return (isset($this->fieldSets[$type]) === true ? $this->fieldSets[$type] : []);
         }
+    }
+
+    /**
+     * @inheritdoc
+     */
+    public function hasMatchWithIncludedPaths($path)
+    {
+        $hasMatch = false;
+
+        if ($this->includePaths !== null) {
+            if (array_key_exists($path, $this->matchCache) === true) {
+                $hasMatch = $this->matchCache[$path];
+            } else {
+                foreach ($this->includePaths as $targetPath) {
+                    if (strpos($targetPath, $path) === 0) {
+                        $hasMatch = true;
+                        break;
+                    }
+                }
+                $this->matchCache[$path] = $hasMatch;
+            }
+        }
+
+        return $hasMatch;
     }
 }
