@@ -31,7 +31,8 @@
   "minimum-stability": "stable",
   "autoload": {
     "psr-4": {
-      "Neomerx\\JsonApi\\": "src/"
+      "Neomerx\\JsonApi\\": "src/",
+      "Tarum\\Api\\": "../src"
     }
   },
   "autoload-dev": {
